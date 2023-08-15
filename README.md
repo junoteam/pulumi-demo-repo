@@ -1,3 +1,25 @@
+## Description of what this Pulumi IaC do:
+
+Folder structure: 
+```bash
+├── Pulumi.dev.yaml # Dev stack config 
+├── Pulumi.prod.yaml
+├── Pulumi.yaml
+├── README.md
+├── __main__.py # Pulumi entry file, calls for modules and methods 
+├── ec2 # This module create EC2 instance and setup WG server
+│   ├── __init__.py
+│   └── ec2.py
+├── requirements.txt
+└── vpc # This module create VPC, IGW, Route table, public subnets, and route associations
+    ├── __init__.py
+    └── vpc.py
+```
+This is very simple Pulumi (Python 3.11) program which do next: 
+1. In `us-east-1` region provision VPC, public subnets, IGW, routing table and does table associations and attach IGW to VPC.
+2. Create AWS EC2 instance of type `t2.micro` in the VPC we created previously, create SG and configure it, and run `user-data` on the server after it's up & running. 
+3. `user-data` Git clones repo (https://github.com/junoteam/wg-ansible-playbook.git) which contain simple Ansible playbooks to install and enable IPtables and then install Wireguard server.
+
 ### Export sensitive vars and set value via Pulumi CLI
 ```bash
 export SSH_KEY_PATH="/<path_to_your_key>/.ssh/tf-cloud-init.pub"
