@@ -1,0 +1,6 @@
+name: pulumi-ec2
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Quick and dirty Wireguard server setup on top of EC2. Was written in train on the way home :)
