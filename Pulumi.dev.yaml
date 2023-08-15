@@ -9,4 +9,5 @@ config:
     - 10.0.0.0/24
     - 10.0.1.0/24
     - 10.0.2.0/24
-  pulumi-ec2:sshKeyPath: "/Users/alexberber/.ssh/tf-cloud-init.pub"
+  pulumi-ec2:sshKeyPath:
+    secure: AAABAPH8zgL9AZEZ2MlBGgNd3weELd8ybYZZ0t3BGJg7jop3uRFhuQgQuFo6qqmkZ9VxC+ySf8pEJYXJ9PeQqS0CcayEP1cS
