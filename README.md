@@ -22,8 +22,8 @@ This is very simple Pulumi (Python 3.11) program which do next:
 
 ### Export sensitive vars and set value via Pulumi CLI
 ```bash
-export SSH_KEY_PATH="/<path_to_your_key>/.ssh/tf-cloud-init.pub"
-pulumi config set pulumi-ec2:sshKeyPath $SSH_KEY_PATH
+export SSH_KEY_PATH="/<path_to_your_key>/.ssh/<your_key>.pub"
+pulumi config set --secret pulumi-ec2:sshKeyPath $SSH_KEY_PATH
 ```
 
 ### Check your stack
