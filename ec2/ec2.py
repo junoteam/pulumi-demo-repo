@@ -8,7 +8,7 @@ def launch_instance(vpc, public_subnets):
     # Create a security group allowing traffic on ports 80, 443, and 22 from anywhere
     security_group = aws.ec2.SecurityGroup("web-ssh-sg",
                                            vpc_id=vpc.id,
-                                           description='Enable HTTP, HTTPS, SSH access',
+                                           description='Enable HTTP, Wireguard (UDP), HTTPS, SSH access',
                                            ingress=[
                                                {"protocol": "tcp", "from_port": 8080, "to_port": 8080, "cidr_blocks": ["0.0.0.0/0"]},
                                                {"protocol": "tcp", "from_port": 443, "to_port": 443, "cidr_blocks": ["0.0.0.0/0"]},
@@ -20,20 +20,26 @@ def launch_instance(vpc, public_subnets):
                                            ])
 
     # Read your public SSH key from a file
-    with open("~/.ssh/tf-cloud-init.pub", "r") as f:
+    ssh_key_path = config_ec2.require("sshKeyPath")
+    with open(ssh_key_path, "r") as f:
         ssh_public_key = f.read()
 
     # Retrieve AMI from Amazon
     ami = aws.ec2.get_ami(most_recent=True,
                           owners=["amazon"],
                           filters=[aws.GetAmiFilterArgs(name="name", values=["al2023-ami-2023*-x86_64"])])
+    # Get AMI id
     ami_id = ami.id
 
+    # Setup user data
     user_data=f"""#!/bin/bash
                     echo '{ssh_public_key}' >> /home/ec2-user/.ssh/authorized_keys
                     sleep 30
-                    dnf update && dnf install python3-pip git
+                    dnf update && dnf install python3-pip git -y
                     pip install ansible
+                    git clone https://github.com/junoteam/wg-ansible-playbook.git wg-ansible-playbook/
+                    ansible-playbook wg-ansible-playbook/playbooks/enable_iptables.yml
+                    ansible-playbook wg-ansible-playbook/playbooks/wireguard_server.yml
                     """
 
     # Create an EC2 instance in one of the public subnets
