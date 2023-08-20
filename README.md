@@ -1,20 +1,26 @@
 ## Description of what this Pulumi IaC do:
 
-Folder structure: 
+Folder structure:
 ```bash
-├── Pulumi.dev.yaml # Dev stack config 
+.
+├── Pulumi.dev.yaml # Dev stack config.
 ├── Pulumi.prod.yaml
 ├── Pulumi.yaml
 ├── README.md
-├── __main__.py # Pulumi entry file, calls for modules and methods 
-├── ec2 # This module create EC2 instance and setup WG server
+├── __main__.py # Pulumi entry file, calls for modules and methods.
+├── ec2 # This module create EC2 instance and setup WG server.
 │   ├── __init__.py
 │   └── ec2.py
+├── iam
+│   ├── __init__.py
+│   └── iam.py
 ├── requirements.txt
-└── vpc # This module create VPC, IGW, Route table, public subnets, and route associations
+├── venv
+└── vpc # This module create VPC, IGW, Route table, public subnets, and route associations.
     ├── __init__.py
     └── vpc.py
 ```
+
 This is very simple Pulumi (Python 3.11) program which do next: 
 1. In `us-east-1` region provision VPC, public subnets, IGW, routing table and does table associations and attach IGW to VPC.
 2. Create AWS EC2 instance of type `t2.micro` in the VPC we created previously, create SG and configure it, and run `user-data` on the server after it's up & running. 

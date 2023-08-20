@@ -29,7 +29,7 @@ def create_iam_role_ssm():
 
     # Attach existing service policy for newly created role
     aws.iam.RolePolicyAttachment("rolePolicyAttachment",
-         policy_arn="arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
+         policy_arn="arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
          role=ec2_role.name)
 
     # Create Instance Profile
