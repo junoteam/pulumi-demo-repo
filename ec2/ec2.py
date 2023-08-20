@@ -1,5 +1,6 @@
 import pulumi
 import pulumi_aws as aws
+from iam import iam
 
 config_ec2 = pulumi.Config("pulumi-ec2")
 instance_type = config_ec2.require("instance_type")
@@ -42,15 +43,18 @@ def launch_instance(vpc, public_subnets):
                     ansible-playbook wg-ansible-playbook/playbooks/wireguard_server.yml
                     """
 
-    # Create an EC2 instance in one of the public subnets
+    # Get instance profile for SSM role from IAM module
+    instance_profile = iam.create_iam_role_ssm()
+
+    # Create an EC2 instance in one of the public subnets with SSM Role attached
     ec2_instance = aws.ec2.Instance("pulumi-ec2",
                                     instance_type=instance_type,
                                     ami=ami_id,
                                     subnet_id=public_subnets[0].id,
                                     vpc_security_group_ids=[security_group.id],
                                     user_data=user_data,
+                                    iam_instance_profile=instance_profile.name,
                                     associate_public_ip_address=True,
                                     tags={'Name': 'pulumi-wg-instance'}
                                     )
     return ec2_instance
-
