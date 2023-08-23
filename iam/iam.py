@@ -21,12 +21,6 @@ def create_iam_role_ssm():
             ]
         })
 
-    # TO DO
-    # AmazonEC2RoleforSSM
-    # This policy will soon be deprecated.
-    # Please use AmazonSSMManagedInstanceCore policy to enable AWS Systems Manager service core functionality on EC2 instances.
-    # For more information see https://docs.aws.amazon.com/systems-manager/latest/userguide/setup-instance-profile.html
-
     # Attach existing service policy for newly created role
     aws.iam.RolePolicyAttachment("rolePolicyAttachment",
          policy_arn="arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
