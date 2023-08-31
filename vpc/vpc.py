@@ -9,7 +9,7 @@ private_subnet_cidrs = config_vpc.require_object("private_subnet_cidrs")
 def create_vpc():
     # Create the VPC
     vpc = aws.ec2.Vpc("pulumi-vpc",
-                      cidr_block="10.0.0.0/16",
+                      cidr_block="10.0.0.0/16", # TO DO: Remove vpc hardcode
                       enable_dns_support=True,
                       enable_dns_hostnames=True,
                       tags={'Name': 'pulumi-vpc'})
