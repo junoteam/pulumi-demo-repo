@@ -1,10 +1,6 @@
 import pulumi
 import pulumi_aws as aws
 
-# Retrieve configuration values from Pulumi configuration
-config_ec2 = pulumi.Config("pulumi-ec2")
-instance_type = config_ec2.require("instance_type")
-
 # Func to create an IAM role for SSM
 def create_iam_role_ssm():
     # Create custom IAM Role for EC2

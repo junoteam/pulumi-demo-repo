@@ -1,6 +1,7 @@
 config:
   aws:region: us-east-1
   pulumi-ec2:instance_type: t2.micro
+  pulumi-ec2:bucket_names: "apple,banana,cherry"
   pulumi-ec2:private_subnet_cidrs:
     - 10.0.3.0/24
     - 10.0.4.0/24
