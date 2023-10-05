@@ -31,12 +31,17 @@ def create_vpc():
                                  destination_cidr_block="0.0.0.0/0",
                                  gateway_id=igw.id)
 
+    # Fetch the available AZs in the region
+    azs = aws.get_availability_zones()
+
     # Create public subnets
     public_subnets = []
     for idx, cidr in enumerate(public_subnet_cidrs):
+        az_name = azs.names[idx % len(azs.names)]
         public_subnet = aws.ec2.Subnet(f"public-subnet-{idx}",
                                        cidr_block=cidr,
                                        vpc_id=vpc.id,
+                                       availability_zone=az_name,
                                        tags={'Name': f'pulumi-public-subnet-{idx}'},
                                        map_public_ip_on_launch=True)
         public_subnets.append(public_subnet)
@@ -57,9 +62,11 @@ def create_vpc():
     # Create private subnets
     private_subnets = []
     for idx, cidr in enumerate(private_subnet_cidrs):
+        az_name = azs.names[idx % len(azs.names)]
         private_subnet = aws.ec2.Subnet(f"private-subnet-{idx}",
                                         cidr_block=cidr,
                                         vpc_id=vpc.id,
+                                        availability_zone=az_name,
                                         tags={'Name': f'pulumi-private-subnet-{idx}'})
         private_subnets.append(private_subnet)
 
