@@ -1,4 +1,11 @@
-## Description of what this Pulumi IaC do:
+## Description of what this Pulumi IaC do
+
+### Install additional Pulumi packages
+EKS Package (https://github.com/pulumi/pulumi-eks)
+```bash
+cd <my-pulumi-project>
+./venv/bin/pip install pulumi_eks
+```
 
 Folder structure:
 ```bash
@@ -39,7 +46,22 @@ pulumi stack ls
 
 ### Select `dev` stack (in my case)
 ```bash
-pulumi select dev
+pulumi stack select dev
+```
+
+### Check currently active `stack`
+```bash
+pulumi stack
+Current stack is dev:
+    Owner: Alex
+    Last updated: 1 week ago (2023-09-26 16:03:04.543055 +0300 IDT)
+    Pulumi version used: v3.85.0
+Current stack resources (0):
+    No resources currently in this stack
+
+More information at: https://app.pulumi.com/<user>/pulumi-ec2/dev
+
+Use `pulumi stack select` to change stack; `pulumi stack ls` lists known ones
 ```
 
 ### Preview changes

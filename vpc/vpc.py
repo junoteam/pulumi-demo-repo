@@ -5,11 +5,12 @@ import pulumi_aws as aws
 config_vpc = pulumi.Config("pulumi-ec2")
 public_subnet_cidrs = config_vpc.require_object("public_subnet_cidrs")
 private_subnet_cidrs = config_vpc.require_object("private_subnet_cidrs")
+vpc_cidr = config_vpc.require("vpc_cidr")
 
 def create_vpc():
     # Create the VPC
     vpc = aws.ec2.Vpc("pulumi-vpc",
-                      cidr_block="10.0.0.0/16", # TO DO: Remove vpc hardcode
+                      cidr_block=vpc_cidr,
                       enable_dns_support=True,
                       enable_dns_hostnames=True,
                       tags={'Name': 'pulumi-vpc'})
@@ -36,7 +37,7 @@ def create_vpc():
         public_subnet = aws.ec2.Subnet(f"public-subnet-{idx}",
                                        cidr_block=cidr,
                                        vpc_id=vpc.id,
-                                       tags={'Name': 'pulumi-public-subnet'},
+                                       tags={'Name': f'pulumi-public-subnet-{idx}'},
                                        map_public_ip_on_launch=True)
         public_subnets.append(public_subnet)
 
@@ -48,7 +49,30 @@ def create_vpc():
                                                     subnet_id=subnet.id)
         public_subnet_associations.append(association)
 
+    # Create a Route Table for the private subnets
+    private_route_table = aws.ec2.RouteTable("private-route-table",
+                                             vpc_id=vpc.id,
+                                             tags={'Name': 'pulumi-private-rt'})
+
+    # Create private subnets
+    private_subnets = []
+    for idx, cidr in enumerate(private_subnet_cidrs):
+        private_subnet = aws.ec2.Subnet(f"private-subnet-{idx}",
+                                        cidr_block=cidr,
+                                        vpc_id=vpc.id,
+                                        tags={'Name': f'pulumi-private-subnet-{idx}'})
+        private_subnets.append(private_subnet)
+
+    # Associate each private subnet with the private route table
+    private_subnet_associations = []
+    for idx, subnet in enumerate(private_subnets):
+        association = aws.ec2.RouteTableAssociation(f"private-subnet-association-{idx}",
+                                                    route_table_id=private_route_table.id,
+                                                    subnet_id=subnet.id)
+        private_subnet_associations.append(association)
+
     return {
         'vpc': vpc,
-        'public_subnets': public_subnets
+        'public_subnets': public_subnets,
+        'private_subnets': private_subnets
     }

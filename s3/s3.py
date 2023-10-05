@@ -14,7 +14,6 @@ def random_string(length=4):
 # Create AWS S3 buckets
 def create_s3_buckets():
     bucket_names = [name.strip() for name in bucket_names_str.split(",")]
-    print(bucket_names)
     bucket_ids = []
 
     for bucket_name in bucket_names:
