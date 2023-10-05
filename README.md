@@ -1,10 +1,15 @@
 ## Description of what this Pulumi IaC do
 
+### Versions
+Pulumi version: `3.86.0`  
+Python version: `3.11`  
+Pip version: `3.11`
+
 ### Install additional Pulumi packages
 EKS Package (https://github.com/pulumi/pulumi-eks)
 ```bash
 cd <my-pulumi-project>
-./venv/bin/pip install pulumi_eks
+./venv/bin/pip install -r requirements.txt
 ```
 
 Folder structure:
@@ -80,29 +85,57 @@ Use `pulumi stack select` to change stack; `pulumi stack ls` lists known ones
 ```bash
 pulumi preview
 
-     Type                              Name                         Plan
- +   pulumi:pulumi:Stack               pulumi-ec2-dev               create
- +   ├─ aws:ec2:Vpc                    pulumi-vpc                   create
- +   ├─ aws:ec2:InternetGateway        pulumi-igw                   create
- +   ├─ aws:ec2:RouteTable             public-route-table           create
- +   ├─ aws:ec2:Subnet                 public-subnet-0              create
- +   ├─ aws:ec2:Subnet                 public-subnet-1              create
- +   ├─ aws:ec2:Subnet                 public-subnet-2              create
- +   ├─ aws:ec2:SecurityGroup          web-ssh-sg                   create
- +   ├─ aws:ec2:Route                  public-route                 create
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-0  create
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-1  create
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-2  create
- +   └─ aws:ec2:Instance               pulumi-ec2                   create
+     Type                              Name                          Plan       Info
+ +   pulumi:pulumi:Stack               pulumi-ec2-dev                create     3 messages
+ +   ├─ aws:ec2:Vpc                    pulumi-vpc                    create
+ +   ├─ aws:ec2:Subnet                 public-subnet-0               create
+ +   ├─ aws:ec2:Subnet                 public-subnet-1               create
+ +   ├─ aws:ec2:Subnet                 public-subnet-2               create
+ +   ├─ aws:ec2:InternetGateway        pulumi-igw                    create
+ +   ├─ aws:ec2:RouteTable             public-route-table            create
+ +   ├─ aws:ec2:RouteTable             private-route-table           create
+ +   ├─ aws:ec2:Subnet                 private-subnet-0              create
+ +   ├─ aws:ec2:Subnet                 private-subnet-1              create
+ +   ├─ aws:ec2:Subnet                 private-subnet-2              create
+ +   ├─ aws:ec2:SecurityGroup          web-ssh-sg                    create
+ +   ├─ aws:ec2:Route                  public-route                  create
+ +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-0   create
+ +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-1   create
+ +   ├─ aws:ec2:RouteTableAssociation  private-subnet-association-0  create
+ +   ├─ aws:ec2:RouteTableAssociation  private-subnet-association-1  create
+ +   ├─ aws:ec2:RouteTableAssociation  private-subnet-association-2  create
+ +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-2   create
+ +   ├─ aws:iam:Role                   ec2Role                       create
+ +   ├─ aws:s3:Bucket                  apple-ofs1fjhf                create
+ +   ├─ aws:s3:Bucket                  banana-qvh18ifm               create
+ +   ├─ aws:s3:Bucket                  cherry-12r32j6c               create
+ +   ├─ aws:ec2:SecurityGroup          pulumi-rds-sg                 create
+ +   ├─ aws:rds:SubnetGroup            pulumi-rds-subnet-group       create
+ +   ├─ aws:iam:RolePolicyAttachment   rolePolicyAttachment          create
+ +   ├─ aws:iam:InstanceProfile        instanceProfile               create
+ +   ├─ aws:rds:Instance               pulumi-rds-instance           create
+ +   └─ aws:ec2:Instance               pulumi-ec2                    create
 
+
+Diagnostics:
+  pulumi:pulumi:Stack (pulumi-ec2-dev):
+    Created bucket with name: apple-ofs1fjhf
+    Created bucket with name: banana-qvh18ifm
+    Created bucket with name: cherry-12r32j6c
 
 Outputs:
+    buckets     : [
+        [0]: output<string>
+        [1]: output<string>
+        [2]: output<string>
+    ]
     instance_url: output<string>
     private_ip  : output<string>
+    projectName : "pulumi-ec2"
     public_ip   : output<string>
 
 Resources:
-    + 13 to create
+    + 29 to create
 ```
 
 ### Launch cloud resources deployment
