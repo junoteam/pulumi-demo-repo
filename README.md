@@ -10,28 +10,40 @@ cd <my-pulumi-project>
 Folder structure:
 ```bash
 .
-├── Pulumi.dev.yaml # Dev stack config.
+├── Pulumi.dev.yaml # main stack
 ├── Pulumi.prod.yaml
 ├── Pulumi.yaml
 ├── README.md
-├── __main__.py # Pulumi entry file, calls for modules and methods.
-├── ec2 # This module create EC2 instance and setup WG server.
+├── __main__.py
+├── ec2
 │   ├── __init__.py
 │   └── ec2.py
+├── eks
+│   ├── __init__.py
+│   └── eks.py
 ├── iam
 │   ├── __init__.py
 │   └── iam.py
+├── rds
+│   ├── __init__.py
+│   └── rds.py
 ├── requirements.txt
+├── s3
+│   ├── __init__.py
+│   └── s3.py
 ├── venv
-└── vpc # This module create VPC, IGW, Route table, public subnets, and route associations.
+└── vpc
     ├── __init__.py
     └── vpc.py
 ```
 
 This is very simple Pulumi (Python 3.11) program which do next: 
 1. In `us-east-1` region provision VPC, public subnets, IGW, routing table and does table associations and attach IGW to VPC.
-2. Create AWS EC2 instance of type `t2.micro` in the VPC we created previously, create SG and configure it, and run `user-data` on the server after it's up & running. 
+2. Create AWS EC2 instance of type `t2.micro` in the VPC we created previously, create SG and configure it, and run `user-data` on the server after it's up & running.  
 3. `user-data` Git clones repo (https://github.com/junoteam/wg-ansible-playbook.git) which contain simple Ansible playbooks to install and enable IPtables and then install Wireguard server.
+4. Create 3 AWS S3 buckets for a demo purpose. 
+5. Create AWS RDS Instance for a demo purpose. Including private subnets (`vpc.py` module), subnet group and security group for database.
+6. It includes `iam.py` module which creates Instance Profile to attach SSM policy to EC2 instance, to have access to EC2 via SSM.
 
 ### Export sensitive vars and set value via Pulumi CLI
 ```bash
