@@ -1,9 +1,10 @@
-## Description of what this Pulumi IaC do
+## Description of what this Pulumi IaC code do [AWS Amazon Cloud]
+![Alt text for the image](./pulumi-pic.png)
 
 ### Versions
 Pulumi version: `3.86.0`  
 Python version: `3.11`  
-Pip version: `3.11`
+Pip version: `3.11`  
 
 ### Install additional Pulumi packages
 EKS Package (https://github.com/pulumi/pulumi-eks)
@@ -50,13 +51,13 @@ This is very simple Pulumi (Python 3.11) program which do next:
 5. Create AWS RDS Instance for a demo purpose. Including private subnets (`vpc.py` module), subnet group and security group for database.
 6. It includes `iam.py` module which creates Instance Profile to attach SSM policy to EC2 instance, to have access to EC2 via SSM.
 
-### Export sensitive vars and set value via Pulumi CLI
+### Export `sensitive vars` and set value via Pulumi CLI
 ```bash
 export SSH_KEY_PATH="/<path_to_your_key>/.ssh/<your_key>.pub"
 pulumi config set --secret pulumi-ec2:sshKeyPath $SSH_KEY_PATH
 ```
 
-### Check your stack
+### Check your `stack`
 ```bash
 pulumi stack ls
 ```
@@ -69,6 +70,7 @@ pulumi stack select dev
 ### Check currently active `stack`
 ```bash
 pulumi stack
+
 Current stack is dev:
     Owner: Alex
     Last updated: 1 week ago (2023-09-26 16:03:04.543055 +0300 IDT)

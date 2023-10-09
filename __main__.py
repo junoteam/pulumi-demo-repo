@@ -24,7 +24,7 @@ rds_instance = create_rds_instance(vpc_resources['vpc'].id, rds_subnet_group)
 buckets = create_s3_buckets()
 
 # Create EKS cluster
-# cluster = create_eks_cluster()
+cluster = create_eks_cluster()
 
 # Export diff data about Cloud Resources
 pulumi.export("public_ip", instance.public_ip)
