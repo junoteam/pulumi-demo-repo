@@ -13,6 +13,9 @@ cd <my-pulumi-project>
 ./venv/bin/pip install -r requirements.txt
 ```
 
+### Pulumi project name: `pulumi-ec2`
+It's configured in `Pulumi.yaml` -> `name: pulumi-ec2`
+
 Folder structure:
 ```bash
 .
