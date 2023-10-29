@@ -53,8 +53,13 @@ This is very simple Pulumi (Python 3.11) program which do next:
 
 ### Export `sensitive vars` and set value via Pulumi CLI
 ```bash
+# SSH key for AWS EC2 instance
 export SSH_KEY_PATH="/<path_to_your_key>/.ssh/<your_key>.pub"
 pulumi config set --secret pulumi-ec2:sshKeyPath $SSH_KEY_PATH
+
+# Secrets for AWS RDS Instance:
+pulumi config set --secret pulumi-ec2:rds-password <db_password>
+pulumi config set --secret pulumi-ec2:username <db_user>
 ```
 
 ### Check your `stack`
