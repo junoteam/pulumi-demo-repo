@@ -1,8 +1,7 @@
 config:
   aws:region: us-east-1
-  pulumi-ec2:instance_type: t2.micro
   pulumi-ec2:bucket_names: "apple,banana,cherry"
-  pulumi-ec2:vpc_cidr: "10.0.0.0/16"
+  pulumi-ec2:instance_type: t2.micro
   pulumi-ec2:private_subnet_cidrs:
     - 10.0.3.0/24
     - 10.0.4.0/24
@@ -11,13 +10,16 @@ config:
     - 10.0.0.0/24
     - 10.0.1.0/24
     - 10.0.2.0/24
-  pulumi-ec2:sshKeyPath:
-    secure: AAABAPH8zgL9AZEZ2MlBGgNd3weELd8ybYZZ0t3BGJg7jop3uRFhuQgQuFo6qqmkZ9VxC+ySf8pEJYXJ9PeQqS0CcayEP1cS
   pulumi-ec2:rds-allocated_storage: "50"
-  pulumi-ec2:rds-storage_type: "gp3"
   pulumi-ec2:rds-engine: "mysql"
   pulumi-ec2:rds-engine_version: "8.0.33"
   pulumi-ec2:rds-instance_class: "db.t3.micro"
   pulumi-ec2:rds-parameter_group_name: "default.mysql8.0"
-  pulumi-ec2:rds-password: "password"
-  pulumi-ec2:username: "username"
+  pulumi-ec2:rds-password:
+    secure: AAABANthXO8Fet0B6OHdcQs7K4Voq7L3xQ6VQ7pCdQsVk08zcEfzYznctRPBGMyXaxbK+1zEmNY=
+  pulumi-ec2:rds-storage_type: "gp3"
+  pulumi-ec2:sshKeyPath:
+    secure: AAABAPH8zgL9AZEZ2MlBGgNd3weELd8ybYZZ0t3BGJg7jop3uRFhuQgQuFo6qqmkZ9VxC+ySf8pEJYXJ9PeQqS0CcayEP1cS
+  pulumi-ec2:username:
+    secure: AAABANjWZSo5VYwNDqSG1ubYwC+RbVT5wCSthKcVzwMx5UeQcS6Sua/B
+  pulumi-ec2:vpc_cidr: "10.0.0.0/16"

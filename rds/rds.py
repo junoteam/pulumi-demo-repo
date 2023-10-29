@@ -9,8 +9,8 @@ engine = config_ec2.require("rds-engine")
 engine_version = config_ec2.require("rds-engine_version")
 instance_class = config_ec2.require("rds-instance_class")
 parameter_group_name = config_ec2.require("rds-parameter_group_name")
-password = config_ec2.require("rds-password")
-username = config_ec2.require("username")
+password = config_ec2.require_secret("rds-password")
+username = config_ec2.require_secret("username")
 
 def create_rds_security_group(vpc_id):
     rds_sg = aws.ec2.SecurityGroup("pulumi-rds-sg",
