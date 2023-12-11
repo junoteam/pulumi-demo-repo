@@ -35,7 +35,7 @@ def launch_vpn_instance(vpc, public_subnets, iam_instance_profile):
 
     # Setup user data
     user_data=f"""#!/bin/bash
-                    echo '{ssh_public_key}' >> /home/ec2_generic-user/.ssh/authorized_keys
+                    echo '{ssh_public_key}' >> /home/ec2-user/.ssh/authorized_keys
                     sleep 30
                     dnf update && dnf install python3-pip git -y
                     pip install ansible
