@@ -4,9 +4,9 @@ from iam import iam
 
 # Retrieve configuration values from Pulumi configuration
 config_ec2 = pulumi.Config("pulumi-ec2")
-instance_type = config_ec2.require("instance_type")
+instance_type = config_ec2.require("instance_type_vpn")
 
-def launch_instance(vpc, public_subnets):
+def launch_vpn_instance(vpc, public_subnets, iam_instance_profile):
     # Create a security group allowing traffic on ports 80, 443, and 22 from anywhere
     security_group = aws.ec2.SecurityGroup("web-ssh-sg",
                                            vpc_id=vpc.id,
@@ -35,7 +35,7 @@ def launch_instance(vpc, public_subnets):
 
     # Setup user data
     user_data=f"""#!/bin/bash
-                    echo '{ssh_public_key}' >> /home/ec2-user/.ssh/authorized_keys
+                    echo '{ssh_public_key}' >> /home/ec2_generic-user/.ssh/authorized_keys
                     sleep 30
                     dnf update && dnf install python3-pip git -y
                     pip install ansible
@@ -44,17 +44,14 @@ def launch_instance(vpc, public_subnets):
                     ansible-playbook wg-ansible-playbook/playbooks/wireguard_server.yml
                     """
 
-    # Get instance profile for SSM role from IAM module
-    instance_profile = iam.create_iam_role_ssm()
-
     # Create an EC2 instance in one of the public subnets with SSM Role attached
-    ec2_instance = aws.ec2.Instance("pulumi-ec2",
+    ec2_instance = aws.ec2.Instance("pulumi-ec2_generic",
                                     instance_type=instance_type,
                                     ami=ami_id,
                                     subnet_id=public_subnets[0].id,
                                     vpc_security_group_ids=[security_group.id],
                                     user_data=user_data,
-                                    iam_instance_profile=instance_profile.name,
+                                    iam_instance_profile=iam_instance_profile.name,
                                     associate_public_ip_address=True,
                                     tags={'Name': 'pulumi-wg-instance'}
                                     )
