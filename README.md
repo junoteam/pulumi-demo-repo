@@ -4,13 +4,18 @@
 ### Versions
 Pulumi version: `3.105.0`  
 Python version: `3.11`  
-Pip version: `3.11`  
+Pip version: `24.0`
 
 ### Install additional Pulumi packages
 EKS Package (https://github.com/pulumi/pulumi-eks)
+
+### Pulumi plugins versions
 ```bash
-cd <my-pulumi-project>
-./venv/bin/pip install -r requirements.txt
+pulumi plugin ls
+NAME        KIND      VERSION  SIZE    INSTALLED       LAST USED
+aws         resource  6.20.1   604 MB  52 seconds ago  46 seconds ago
+eks         resource  2.2.1    87 MB   55 seconds ago  55 seconds ago
+kubernetes  resource  4.7.1    92 MB   55 seconds ago  55 seconds ago
 ```
 
 ### Pulumi project name: `pulumi-ec2`

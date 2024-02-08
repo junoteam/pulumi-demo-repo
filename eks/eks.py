@@ -1,7 +1,5 @@
 import pulumi
 import pulumi_eks as eks
-from iam import iam
-import pulumi_aws as aws
 
 # Create an EKS cluster with the pretty default configuration.
 def create_eks_cluster(private_subnets, public_subnets, vpc_id):

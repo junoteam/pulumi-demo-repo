@@ -1,25 +1,27 @@
 import pulumi_aws as aws
-from pulumi_aws import config, iam
+from pulumi_aws import iam
 import json
 
 
 # Func to create an IAM role for SSM
 def create_iam_role_ssm():
     # Create custom IAM Role for EC2
-    ec2_role = aws.iam.Role("ec2Role",
-                            assume_role_policy={
-                                "Version": "2012-10-17",
-                                "Statement": [
-                                    {
-                                        "Action": "sts:AssumeRole",
-                                        "Principal": {
-                                            "Service": "ec2.amazonaws.com"
-                                        },
-                                        "Effect": "Allow",
-                                        "Sid": ""
-                                    }
-                                ]
-                            })
+    ec2_role = aws.iam.Role(
+        "ec2Role",
+        assume_role_policy=json.dumps({
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Action": "sts:AssumeRole",
+                    "Principal": {
+                        "Service": "ec2.amazonaws.com"
+                    },
+                    "Effect": "Allow",
+                    "Sid": ""
+                }
+            ],
+        }),
+    )
 
     # Attach existing service policy for newly created role
     aws.iam.RolePolicyAttachment("rolePolicyAttachment",

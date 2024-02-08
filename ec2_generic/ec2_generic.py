@@ -30,7 +30,7 @@ def launch_generic_instance(vpc, public_subnets, iam_instance_profile, instance_
     # Retrieve AMI from Amazon
     ami = aws.ec2.get_ami(most_recent=True,
                           owners=["amazon"],
-                          filters=[aws.GetAmiFilterArgs(name="name", values=["al2023-ami-2023*-x86_64"])])
+                          filters=[aws.ec2.GetAmiFilterArgs(name="name", values=["al2023-ami-2023*-x86_64"])])
     # Get AMI id
     ami_id = ami.id
 

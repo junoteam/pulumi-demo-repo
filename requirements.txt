@@ -1,4 +1,0 @@
-pulumi==3.105.0
-pulumi-aws==6.20.1
-pulumi_eks==2.2.1
-pulumi-kubernetes==4.7.1
