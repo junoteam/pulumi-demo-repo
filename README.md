@@ -2,7 +2,7 @@
 ![Alt text for the image](./pulumi-pic.png)
 
 ### Versions
-Pulumi version: `3.86.0`  
+Pulumi version: `3.105.0`  
 Python version: `3.11`  
 Pip version: `3.11`  
 
