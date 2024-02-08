@@ -43,12 +43,12 @@ def create_rds_subnet_group(private_subnets):
 def create_rds_instance(vpc_id, rds_subnet_group):
     rds_sg = create_rds_security_group(vpc_id)
     rds_instance = aws.rds.Instance("pulumi-rds-instance",
-                                    name="pulumi_created_db",
+                                    db_name="pulumi_created_db",
                                     allocated_storage=allocated_storage,
                                     storage_type=storage_type,
                                     engine=engine,
                                     db_subnet_group_name=rds_subnet_group.name,
-                                    deletion_protection=True, # Pulumi will not be able to delete it when you run pulumi destroy
+                                    deletion_protection=True, ## Pulumi will not be able to delete rds instance when you run pulumi destroy, need to modify it first and remove deletion_protection
                                     publicly_accessible=False,
                                     vpc_security_group_ids=[rds_sg.id],
                                     multi_az=False,
