@@ -23,31 +23,44 @@ It's configured in `Pulumi.yaml` -> `name: pulumi-ec2`
 
 Folder structure:
 ```bash
-.
-├── Pulumi.dev.yaml # main stack
+├── Pulumi.dev.yaml
 ├── Pulumi.prod.yaml
 ├── Pulumi.yaml
 ├── README.md
 ├── __main__.py
-├── ec2
+├── ec2_generic
 │   ├── __init__.py
-│   └── ec2.py
+│   ├── __pycache__
+│   └── ec2_generic.py
+├── ec2_vpn
+│   ├── __init__.py
+│   ├── __pycache__
+│   └── ec2_vpn.py
+├── ecr
+│   ├── __init__.py
+│   ├── __pycache__
+│   └── ecr.py
 ├── eks
+│   ├── README.md
 │   ├── __init__.py
+│   ├── __pycache__
 │   └── eks.py
 ├── iam
 │   ├── __init__.py
+│   ├── __pycache__
 │   └── iam.py
+├── pulumi-pic.png
 ├── rds
 │   ├── __init__.py
+│   ├── __pycache__
 │   └── rds.py
-├── requirements.txt
 ├── s3
 │   ├── __init__.py
+│   ├── __pycache__
 │   └── s3.py
-├── venv
 └── vpc
     ├── __init__.py
+    ├── __pycache__
     └── vpc.py
 ```
 
@@ -83,134 +96,25 @@ pulumi stack select dev
 ### Check currently active `stack`
 ```bash
 pulumi stack
-
 Current stack is dev:
     Owner: Alex
-    Last updated: 1 week ago (2023-09-26 16:03:04.543055 +0300 IDT)
-    Pulumi version used: v3.85.0
+    Last updated: 38 minutes ago (2024-02-08 17:32:39.643438 +0200 IST)
+    Pulumi version used: v3.105.0
 Current stack resources (0):
     No resources currently in this stack
-
-More information at: https://app.pulumi.com/<user>/pulumi-ec2/dev
-
-Use `pulumi stack select` to change stack; `pulumi stack ls` lists known ones
 ```
 
 ### Preview changes
 ```bash
 pulumi preview
-
-     Type                              Name                          Plan       Info
- +   pulumi:pulumi:Stack               pulumi-ec2-dev                create     3 messages
- +   ├─ aws:ec2:Vpc                    pulumi-vpc                    create
- +   ├─ aws:ec2:Subnet                 public-subnet-0               create
- +   ├─ aws:ec2:Subnet                 public-subnet-1               create
- +   ├─ aws:ec2:Subnet                 public-subnet-2               create
- +   ├─ aws:ec2:InternetGateway        pulumi-igw                    create
- +   ├─ aws:ec2:RouteTable             public-route-table            create
- +   ├─ aws:ec2:RouteTable             private-route-table           create
- +   ├─ aws:ec2:Subnet                 private-subnet-0              create
- +   ├─ aws:ec2:Subnet                 private-subnet-1              create
- +   ├─ aws:ec2:Subnet                 private-subnet-2              create
- +   ├─ aws:ec2:SecurityGroup          web-ssh-sg                    create
- +   ├─ aws:ec2:Route                  public-route                  create
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-0   create
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-1   create
- +   ├─ aws:ec2:RouteTableAssociation  private-subnet-association-0  create
- +   ├─ aws:ec2:RouteTableAssociation  private-subnet-association-1  create
- +   ├─ aws:ec2:RouteTableAssociation  private-subnet-association-2  create
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-2   create
- +   ├─ aws:iam:Role                   ec2Role                       create
- +   ├─ aws:s3:Bucket                  apple-ofs1fjhf                create
- +   ├─ aws:s3:Bucket                  banana-qvh18ifm               create
- +   ├─ aws:s3:Bucket                  cherry-12r32j6c               create
- +   ├─ aws:ec2:SecurityGroup          pulumi-rds-sg                 create
- +   ├─ aws:rds:SubnetGroup            pulumi-rds-subnet-group       create
- +   ├─ aws:iam:RolePolicyAttachment   rolePolicyAttachment          create
- +   ├─ aws:iam:InstanceProfile        instanceProfile               create
- +   ├─ aws:rds:Instance               pulumi-rds-instance           create
- +   └─ aws:ec2:Instance               pulumi-ec2                    create
-
-
-Diagnostics:
-  pulumi:pulumi:Stack (pulumi-ec2-dev):
-    Created bucket with name: apple-ofs1fjhf
-    Created bucket with name: banana-qvh18ifm
-    Created bucket with name: cherry-12r32j6c
-
-Outputs:
-    buckets     : [
-        [0]: output<string>
-        [1]: output<string>
-        [2]: output<string>
-    ]
-    instance_url: output<string>
-    private_ip  : output<string>
-    projectName : "pulumi-ec2"
-    public_ip   : output<string>
-
-Resources:
-    + 29 to create
 ```
 
 ### Launch cloud resources deployment
 ```bash
 pulumi up
-
-     Type                              Name                         Status
- +   pulumi:pulumi:Stack               pulumi-ec2-dev               created (65s)
- +   ├─ aws:ec2:Vpc                    pulumi-vpc                   created (14s)
- +   ├─ aws:ec2:InternetGateway        pulumi-igw                   created (1s)
- +   ├─ aws:ec2:RouteTable             public-route-table           created (2s)
- +   ├─ aws:ec2:Subnet                 public-subnet-1              created (12s)
- +   ├─ aws:ec2:Subnet                 public-subnet-2              created (13s)
- +   ├─ aws:ec2:Subnet                 public-subnet-0              created (13s)
- +   ├─ aws:ec2:SecurityGroup          web-ssh-sg                   created (5s)
- +   ├─ aws:ec2:Route                  public-route                 created (1s)
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-1  created (1s)
- +   ├─ aws:ec2:Instance               pulumi-ec2                   created (33s)
- +   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-0  created (1s)
- +   └─ aws:ec2:RouteTableAssociation  public-subnet-association-2  created (1s)
-
-
-Outputs:
-    instance_url: "ec2-54-82-174-84.compute-1.amazonaws.com"
-    private_ip  : "10.0.0.202"
-    public_ip   : "54.82.174.84"
-
-Resources:
-    + 13 created
-
-Duration: 1m8s
 ``` 
 
 ### Destroy cloud resources
 ```bash
 pulumi destroy
-
-     Type                              Name                         Status
- -   pulumi:pulumi:Stack               pulumi-ec2-dev               deleted
- -   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-0  deleted (2s)
- -   ├─ aws:ec2:Route                  public-route                 deleted (2s)
- -   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-1  deleted (2s)
- -   ├─ aws:ec2:Instance               pulumi-ec2                   deleted (32s)
- -   ├─ aws:ec2:RouteTableAssociation  public-subnet-association-2  deleted (2s)
- -   ├─ aws:ec2:Subnet                 public-subnet-1              deleted (1s)
- -   ├─ aws:ec2:Subnet                 public-subnet-2              deleted (1s)
- -   ├─ aws:ec2:RouteTable             public-route-table           deleted (2s)
- -   ├─ aws:ec2:Subnet                 public-subnet-0              deleted (2s)
- -   ├─ aws:ec2:SecurityGroup          web-ssh-sg                   deleted (3s)
- -   ├─ aws:ec2:InternetGateway        pulumi-igw                   deleted (1s)
- -   └─ aws:ec2:Vpc                    pulumi-vpc                   deleted (1s)
-
-
-Outputs:
-  - instance_url: "ec2-54-82-174-84.compute-1.amazonaws.com"
-  - private_ip  : "10.0.0.202"
-  - public_ip   : "54.82.174.84"
-
-Resources:
-    - 13 deleted
-
-Duration: 41s
 ```
