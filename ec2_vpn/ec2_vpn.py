@@ -1,6 +1,5 @@
 import pulumi
 import pulumi_aws as aws
-from iam import iam
 
 # Retrieve configuration values from Pulumi configuration
 config_ec2 = pulumi.Config("pulumi-ec2")

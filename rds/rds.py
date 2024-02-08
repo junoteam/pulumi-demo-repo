@@ -48,7 +48,7 @@ def create_rds_instance(vpc_id, rds_subnet_group):
                                     storage_type=storage_type,
                                     engine=engine,
                                     db_subnet_group_name=rds_subnet_group.name,
-                                    deletion_protection=True,
+                                    deletion_protection=True, # Pulumi will not be able to delete it when you run pulumi destroy
                                     publicly_accessible=False,
                                     vpc_security_group_ids=[rds_sg.id],
                                     multi_az=False,
@@ -58,6 +58,7 @@ def create_rds_instance(vpc_id, rds_subnet_group):
                                     password=password,
                                     skip_final_snapshot=True,
                                     auto_minor_version_upgrade=True,
+                                    tags={'Name': 'pulumi-rds-db'},
                                     username=username)
 
     return rds_instance
