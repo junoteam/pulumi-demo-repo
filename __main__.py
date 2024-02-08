@@ -6,6 +6,7 @@ from iam.iam import create_iam_role_ssm
 from s3.s3 import create_s3_buckets
 from eks.eks import create_eks_cluster
 from rds.rds import create_rds_subnet_group, create_rds_instance
+from ecr.ecr import create_ecr
 
 # Get Pulumi project name
 project_name = pulumi.get_project()
@@ -34,6 +35,9 @@ rds_instance = create_rds_instance(vpc_resources['vpc'].id, rds_subnet_group)
 
 # Create S3 Buckets
 buckets = create_s3_buckets()
+
+# Create ECR Registry
+ecr_reg = create_ecr()
 
 # Create EKS cluster
 #eks_cluster = create_eks_cluster(vpc_resources['private_subnets'],
