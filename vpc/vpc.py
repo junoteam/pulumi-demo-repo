@@ -7,6 +7,7 @@ public_subnet_cidrs = config_vpc.require_object("public_subnet_cidrs")
 private_subnet_cidrs = config_vpc.require_object("private_subnet_cidrs")
 vpc_cidr = config_vpc.require("vpc_cidr")
 
+
 def create_vpc():
     # Create the VPC
     vpc = aws.ec2.Vpc("pulumi-vpc",

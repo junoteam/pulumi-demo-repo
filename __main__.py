@@ -2,8 +2,7 @@ import pulumi
 from vpc.vpc import create_vpc
 from ec2_vpn.ec2_vpn import launch_vpn_instance
 from ec2_generic.ec2_generic import launch_generic_instance
-from iam.iam import create_iam_role_ssm
-from iam.iam import eks_cluster_role_and_node_role
+from iam.iam import create_iam_role_ssm, eks_worker_role, eks_cluster_role
 from s3.s3 import create_s3_buckets
 from eks.eks import create_eks_cluster
 from rds.rds import create_rds_subnet_group, create_rds_instance
@@ -41,11 +40,13 @@ vpc_resources = create_vpc()
 ecr_reg = create_ecr()
 
 # Create EKS cluster
-eks_worker_role = eks_cluster_role_and_node_role()
+eks_worker_role = eks_worker_role()
+eks_cluster_role = eks_cluster_role()
 eks_cluster = create_eks_cluster(vpc_resources['private_subnets'],
                                  vpc_resources['public_subnets'],
                                  vpc_resources['vpc'].id,
-                                 eks_worker_role)
+                                 eks_worker_role,
+                                 eks_cluster_role)
 
 # Export diff data about Cloud Resources
 #pulumi.export("public_ip", vpn_instance.public_ip)

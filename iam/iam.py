@@ -36,11 +36,8 @@ def create_iam_role_ssm():
     return instance_profile
 
 
-def eks_cluster_role_and_node_role():
-    # # EKS Cluster Role
-    # Purpose: This role is assumed by the EKS service to manage resources on your behalf,
-    # such as creating or managing AWS resources that the cluster might need, like Elastic Load Balancers.
-    log.info('[base.iam.eks_cluster_role_and_node_role]')
+def eks_cluster_role():
+    log.info('[base.iam.eks_cluster_role]')
     eks_cluster_role = iam.Role(
         'eks-iam-role',
         name='EKS-Cluster-Role',
@@ -71,10 +68,11 @@ def eks_cluster_role_and_node_role():
         policy_arn='arn:aws:iam::aws:policy/AmazonEKSClusterPolicy',
     )
 
-    # # EC2 NodeGroup Role
-    # Purpose: This role is for the EC2 instances that will serve as worker nodes in your EKS
-    # cluster. It grants these instances permissions needed to join the cluster, operate within it, and interact with
-    # AWS services that your applications might use (e.g., pulling images from ECR).
+    # Let's return the role from the function
+    return eks_cluster_role
+
+def eks_worker_role():
+    log.info('[base.iam.eks_worker_role]')
     eks_worker_role = iam.Role(
         'ec2-nodegroup-iam-role',
         name='EKS-Worker-Role',
@@ -111,7 +109,5 @@ def eks_cluster_role_and_node_role():
         policy_arn='arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly',
     )
 
-    # Let's return the rule from the function
+    # Let's return the role from the function
     return eks_worker_role
-
-
