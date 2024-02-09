@@ -2,14 +2,14 @@ import pulumi
 import pulumi_eks as eks
 
 # Create an EKS cluster with the pretty default configuration.
-def create_eks_cluster(private_subnets, public_subnets, vpc_id):
-
-    private_subnet_ids = [subnet.id for subnet in private_subnets]
-    public_subnet_ids = [subnet.id for subnet in public_subnets]
+def create_eks_cluster(private_subnets, public_subnets, vpc_id, eks_worker_role):
     eks_cluster = eks.Cluster("eks-cluster",
                           vpc_id=vpc_id,
-                          private_subnet_ids=private_subnet_ids,
-                          public_subnet_ids=public_subnet_ids,
+                          private_subnet_ids=[subnet.id for subnet in private_subnets],
+                          public_subnet_ids=[subnet.id for subnet in public_subnets],
+                          create_oidc_provider=False, #check
+                          skip_default_node_group=False, #check
+                          instance_role=eks_worker_role, #check
                           instance_type="t2.medium",
                           node_associate_public_ip_address=False,
                           desired_capacity=3,
