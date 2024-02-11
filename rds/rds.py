@@ -58,7 +58,11 @@ def create_rds_instance(vpc_id, rds_subnet_group):
                                     password=password,
                                     skip_final_snapshot=True,
                                     auto_minor_version_upgrade=True,
-                                    tags={'Name': 'pulumi-rds-db'},
+                                    tags={
+                                        'Name': 'pulumi-rds-db',
+                                        'Environment': 'dev',
+                                        'ManagedBy': 'Pulumi',
+                                    },
                                     username=username)
 
     return rds_instance

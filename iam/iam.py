@@ -7,6 +7,7 @@ import json
 # Func to create an IAM role for SSM
 def create_iam_role_ssm():
     # Create custom IAM Role for EC2
+    log.info('[base.iam.create_iam_role_ssm]')
     ec2_role = aws.iam.Role(
         "ec2Role",
         assume_role_policy=json.dumps({
@@ -108,6 +109,13 @@ def eks_worker_role():
         role=eks_worker_role.id,
         policy_arn='arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly',
     )
+
+    """
+    instance_profile = aws.iam.InstanceProfile(
+    resource_name=f'node-group-profile-{project_name}-{stack_name}',
+    role=eks_worker_role
+    )
+    """
 
     # Let's return the role from the function
     return eks_worker_role

@@ -52,6 +52,9 @@ def launch_vpn_instance(vpc, public_subnets, iam_instance_profile):
                                     user_data=user_data,
                                     iam_instance_profile=iam_instance_profile.name,
                                     associate_public_ip_address=True,
-                                    tags={'Name': 'pulumi-wg-instance'}
-                                    )
+                                    tags={
+                                        'Name': 'pulumi-wg-instance',
+                                        'Environment': 'dev',
+                                        'ManagedBy': 'Pulumi',
+                                    })
     return ec2_instance

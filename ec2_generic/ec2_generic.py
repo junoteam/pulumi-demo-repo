@@ -52,8 +52,11 @@ def launch_generic_instance(vpc, public_subnets, iam_instance_profile, instance_
                                        user_data=user_data,
                                        iam_instance_profile=iam_instance_profile.name,
                                        associate_public_ip_address=True,
-                                       tags={'Name': f'pulumi-generic-instance-{i}'}
-                                       )
+                                       tags={
+                                           'Name': f'pulumi-generic-instance-{i}',
+                                           'Environment': 'dev',
+                                           'ManagedBy': 'Pulumi',
+                                       })
         instances.append(ec2_generic)
 
     return instances
