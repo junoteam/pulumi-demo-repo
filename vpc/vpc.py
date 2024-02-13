@@ -16,7 +16,8 @@ def create_vpc():
                       enable_dns_hostnames=True,
                       tags={
                           'Name': 'pulumi-vpc',
-                          'Environment': 'dev'
+                          'Environment': 'dev',
+                          'ManagedBy': 'Pulumi'
                       })
 
     # Create an Internet Gateway
@@ -24,7 +25,8 @@ def create_vpc():
                                   vpc_id=vpc.id,
                                   tags={
                                       'Name': 'pulumi-igw',
-                                      'Environment': 'dev'
+                                      'Environment': 'dev',
+                                      'ManagedBy': 'Pulumi'
                                   })
 
     # Create a Route Table for the public subnet
@@ -32,14 +34,15 @@ def create_vpc():
                                             vpc_id=vpc.id,
                                             tags={
                                                 'Name': 'pulumi-public-rt',
-                                                'Environment': 'dev'
+                                                'Environment': 'dev',
+                                                'ManagedBy': 'Pulumi'
                                             })
 
     # Add a route to the Route Table that points all traffic (0.0.0.0/0) to the Internet Gateway
     public_route = aws.ec2.Route("public-route",
                                  route_table_id=public_route_table.id,
                                  destination_cidr_block="0.0.0.0/0",
-                                 gateway_id=igw.id)
+                                 gateway_id=igw.id,)
 
     # Fetch the available AZs in the region
     azs = aws.get_availability_zones()
@@ -57,6 +60,7 @@ def create_vpc():
                                            f'kubernetes.io/cluster/{eks_cluster_name}': "shared",
                                            'kubernetes.io/role/elb': '1',
                                            'Environment': 'dev',
+                                           'ManagedBy': 'Pulumi',
                                        },
                                        map_public_ip_on_launch=True,
                                        assign_ipv6_address_on_creation=False)
@@ -70,13 +74,31 @@ def create_vpc():
                                                     subnet_id=subnet.id)
         public_subnet_associations.append(association)
 
+    # Create NAT GW with EIP
+    nat_gateway_eip = aws.ec2.Eip("nat-gateway-eip", domain="vpc")
+    nat_gateway = aws.ec2.NatGateway("nat-gateway",
+                                     subnet_id=public_subnets[0].id,
+                                     allocation_id=nat_gateway_eip.id,
+                                     tags={
+                                         'Name': 'pulumi-nat-gateway',
+                                         'Environment': 'dev',
+                                         'ManagedBy': 'Pulumi',
+                                     })
+
     # Create a Route Table for the private subnets
     private_route_table = aws.ec2.RouteTable("private-route-table",
                                              vpc_id=vpc.id,
                                              tags={
                                                  'Name': 'pulumi-private-rt',
                                                  'Environment': 'dev',
+                                                 'ManagedBy': 'Pulumi',
                                              })
+
+    # Add a route to the Route Table that points all traffic (0.0.0.0/0) to the NAT Gateway
+    private_route = aws.ec2.Route("private-route",
+                                  route_table_id=private_route_table.id,
+                                  destination_cidr_block="0.0.0.0/0",
+                                  nat_gateway_id=nat_gateway.id)
 
     # Create private subnets
     private_subnets = []
@@ -91,6 +113,7 @@ def create_vpc():
                                             f'kubernetes.io/cluster/{eks_cluster_name}': "shared",
                                             'kubernetes.io/role/internal-elb': '1',
                                             'Environment': 'dev',
+                                            'ManagedBy': 'Pulumi',
                                         })
         private_subnets.append(private_subnet)
 

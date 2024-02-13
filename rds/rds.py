@@ -28,7 +28,10 @@ def create_rds_security_group(vpc_id):
                                        'to_port': 3306,
                                        'cidr_blocks': ['10.0.3.0/24', '10.0.4.0/24', '10.0.5.0/24'],
                                    }],
-                                   tags={'Name': 'pulumi-rds-sg'})
+                                   tags={
+                                       'Name': 'pulumi-rds-sg',
+                                       'ManagedBy': 'Pulumi',
+                                   })
     return rds_sg
 
 
@@ -36,7 +39,10 @@ def create_rds_subnet_group(private_subnets):
     subnet_ids = [subnet.id for subnet in private_subnets]
     rds_subnet_group = aws.rds.SubnetGroup("pulumi-rds-subnet-group",
                                            subnet_ids=subnet_ids,
-                                           tags={'Name': 'pulumi-rds-subnet-group'})
+                                           tags={
+                                               'Name': 'pulumi-rds-subnet-group',
+                                               'ManagedBy': 'Pulumi'
+                                           })
     return rds_subnet_group
 
 
