@@ -74,7 +74,7 @@ def create_vpc():
                                                     subnet_id=subnet.id)
         public_subnet_associations.append(association)
 
-    # Create NAT GW with EIP
+    # Create NAT GW with EIP (single AZ)
     nat_gateway_eip = aws.ec2.Eip("nat-gateway-eip", domain="vpc")
     nat_gateway = aws.ec2.NatGateway("nat-gateway",
                                      subnet_id=public_subnets[0].id,
