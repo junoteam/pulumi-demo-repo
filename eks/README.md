@@ -2,7 +2,7 @@
 
 Get the name of the cluster from AWS Amazon console and run: 
 ```bash
-aws eks --region us-east-1 update-kubeconfig --kubeconfig ./config --name eks-cluster-eksCluster-bc25c89
+aws eks --region us-east-1 update-kubeconfig --kubeconfig ./config --name <cluster-name>
 ```
 
 Or take a name of the EKS cluster from the `output` of your Pulumi stack.

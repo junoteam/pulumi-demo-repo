@@ -46,6 +46,10 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                                   'Environment': 'dev',
                               })
 
+    """
+    TODO: -Install metrics server
+    """
+
     # Output the cluster's kubeconfig and name.
     pulumi.export("kubeconfig", eks_cluster.kubeconfig)
     pulumi.export('cluster-name', eks_cluster.eks_cluster.name)
