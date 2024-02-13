@@ -3,8 +3,8 @@ from pulumi_aws import s3
 import random, string
 
 # Retrieve configuration values from Pulumi configuration
-config_ec2 = pulumi.Config("pulumi-ec2")
-bucket_names_str = config_ec2.require("bucket_names")
+config_s3 = pulumi.Config("pulumi-dev-env")
+bucket_names_str = config_s3.require("bucket_names")
 
 # Generate random postfix string to make names of AWS S3 buckets random
 def random_string(length=4):

@@ -2,9 +2,9 @@ import pulumi
 import pulumi_aws as aws
 
 # Retrieve configuration values from Pulumi configuration
-config_ec2 = pulumi.Config("pulumi-ec2")
-instance_type = config_ec2.require("instance_type_generic")
-ssh_key_path = config_ec2.require("sshKeyPath")
+config_ec2_generic = pulumi.Config("pulumi-dev-env")
+instance_type = config_ec2_generic.require("instance_type_generic")
+ssh_key_path = config_ec2_generic.require("sshKeyPath")
 
 
 def launch_generic_instance(vpc, public_subnets, iam_instance_profile, instance_count):

@@ -2,15 +2,15 @@ import pulumi_aws as aws
 import pulumi
 
 # Retrieve configuration values from Pulumi configuration
-config_ec2 = pulumi.Config("pulumi-ec2")
-allocated_storage = config_ec2.require_int("rds-allocated_storage")
-storage_type = config_ec2.require("rds-storage_type")
-engine = config_ec2.require("rds-engine")
-engine_version = config_ec2.require("rds-engine_version")
-instance_class = config_ec2.require("rds-instance_class")
-parameter_group_name = config_ec2.require("rds-parameter_group_name")
-password = config_ec2.require_secret("rds-password")
-username = config_ec2.require_secret("username")
+config_rds = pulumi.Config("pulumi-dev-env")
+allocated_storage = config_rds.require_int("rds-allocated_storage")
+storage_type = config_rds.require("rds-storage_type")
+engine = config_rds.require("rds-engine")
+engine_version = config_rds.require("rds-engine_version")
+instance_class = config_rds.require("rds-instance_class")
+parameter_group_name = config_rds.require("rds-parameter_group_name")
+password = config_rds.require_secret("rds-password")
+username = config_rds.require_secret("username")
 
 def create_rds_security_group(vpc_id):
     rds_sg = aws.ec2.SecurityGroup("pulumi-rds-sg",

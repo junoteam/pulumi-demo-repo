@@ -2,8 +2,9 @@ import pulumi
 import pulumi_aws as aws
 
 # Retrieve configuration values from Pulumi configuration
-config_ec2 = pulumi.Config("pulumi-ec2")
-instance_type = config_ec2.require("instance_type_vpn")
+config_ec2_vpn = pulumi.Config("pulumi-dev-env")
+instance_type = config_ec2_vpn.require("instance_type_vpn")
+ssh_key_path = config_ec2_vpn.require("sshKeyPath")
 
 def launch_vpn_instance(vpc, public_subnets, iam_instance_profile):
     # Create a security group allowing traffic on ports 80, 443, and 22 from anywhere
@@ -21,7 +22,6 @@ def launch_vpn_instance(vpc, public_subnets, iam_instance_profile):
                                            ])
 
     # Read your public SSH key from a file
-    ssh_key_path = config_ec2.require("sshKeyPath")
     with open(ssh_key_path, "r") as f:
         ssh_public_key = f.read()
 

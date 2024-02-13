@@ -2,10 +2,10 @@ import pulumi
 import pulumi_eks as eks
 
 # Retrieve configuration values from Pulumi configuration
-config_ec2 = pulumi.Config("pulumi-ec2")
-eks_instance_type = config_ec2.require("eks-cluster_instance_type")
-eks_cluster_version = config_ec2.require("eks-cluster_version")
-eks_cluster_name = config_ec2.require("eks-cluster_name")
+config_eks = pulumi.Config("pulumi-dev-env")
+eks_instance_type = config_eks.require("eks-cluster_instance_type")
+eks_cluster_version = config_eks.require("eks-cluster_version")
+eks_cluster_name = config_eks.require("eks-cluster_name")
 
 
 # Create an EKS cluster

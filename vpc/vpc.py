@@ -2,7 +2,7 @@ import pulumi
 import pulumi_aws as aws
 
 # Retrieve configuration values from Pulumi configuration
-config_vpc = pulumi.Config("pulumi-ec2")
+config_vpc = pulumi.Config("pulumi-dev-env")
 public_subnet_cidrs = config_vpc.require_object("public_subnet_cidrs")
 private_subnet_cidrs = config_vpc.require_object("private_subnet_cidrs")
 vpc_cidr = config_vpc.require("vpc_cidr")

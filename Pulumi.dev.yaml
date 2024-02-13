@@ -1,29 +1,29 @@
 config:
   aws:region: us-east-1
-  pulumi-ec2:bucket_names: "apple,banana,cherry"
-  pulumi-ec2:instance_type_vpn: t2.micro
-  pulumi-ec2:instance_type_generic: t3.micro
-  pulumi-ec2:private_subnet_cidrs:
+  pulumi-dev-env:bucket_names: "apple,banana,cherry"
+  pulumi-dev-env:instance_type_vpn: t2.micro
+  pulumi-dev-env:instance_type_generic: t3.micro
+  pulumi-dev-env:private_subnet_cidrs:
     - 10.0.3.0/24
     - 10.0.4.0/24
     - 10.0.5.0/24
-  pulumi-ec2:public_subnet_cidrs:
+  pulumi-dev-env:public_subnet_cidrs:
     - 10.0.0.0/24
     - 10.0.1.0/24
     - 10.0.2.0/24
-  pulumi-ec2:rds-allocated_storage: "50"
-  pulumi-ec2:rds-engine: "mysql"
-  pulumi-ec2:rds-engine_version: "8.0.35"
-  pulumi-ec2:rds-instance_class: "db.t3.micro"
-  pulumi-ec2:rds-parameter_group_name: "default.mysql8.0"
-  pulumi-ec2:eks-cluster_name: "eks-cluster-dev"
-  pulumi-ec2:eks-cluster_version: "1.29"
-  pulumi-ec2:eks-cluster_instance_type: "t2.medium"
-  pulumi-ec2:rds-password:
+  pulumi-dev-env:rds-allocated_storage: "50"
+  pulumi-dev-env:rds-engine: "mysql"
+  pulumi-dev-env:rds-engine_version: "8.0.35"
+  pulumi-dev-env:rds-instance_class: "db.t3.micro"
+  pulumi-dev-env:rds-parameter_group_name: "default.mysql8.0"
+  pulumi-dev-env:eks-cluster_name: "eks-cluster-dev"
+  pulumi-dev-env:eks-cluster_version: "1.29"
+  pulumi-dev-env:eks-cluster_instance_type: "t2.medium"
+  pulumi-dev-env:rds-password:
     secure: AAABANthXO8Fet0B6OHdcQs7K4Voq7L3xQ6VQ7pCdQsVk08zcEfzYznctRPBGMyXaxbK+1zEmNY=
-  pulumi-ec2:rds-storage_type: "gp3"
-  pulumi-ec2:sshKeyPath:
+  pulumi-dev-env:rds-storage_type: "gp3"
+  pulumi-dev-env:sshKeyPath:
     secure: AAABAPH8zgL9AZEZ2MlBGgNd3weELd8ybYZZ0t3BGJg7jop3uRFhuQgQuFo6qqmkZ9VxC+ySf8pEJYXJ9PeQqS0CcayEP1cS
-  pulumi-ec2:username:
+  pulumi-dev-env:username:
     secure: AAABANjWZSo5VYwNDqSG1ubYwC+RbVT5wCSthKcVzwMx5UeQcS6Sua/B
-  pulumi-ec2:vpc_cidr: "10.0.0.0/16"
+  pulumi-dev-env:vpc_cidr: "10.0.0.0/16"
