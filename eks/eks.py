@@ -47,7 +47,8 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                               })
 
     """
-    TODO: -Install metrics server
+    TODO: -Install metrics server, cluster-autoscaler
+          -Add custom node-pool
     """
 
     # Output the cluster's kubeconfig and name.

@@ -7,6 +7,7 @@ from s3.s3 import create_s3_buckets
 from eks.eks import create_eks_cluster
 from rds.rds import create_rds_subnet_group, create_rds_instance
 from ecr.ecr import create_ecr
+from eks_services.base_services import deploy_basic_services
 
 # Get Pulumi project name
 project_name = pulumi.get_project()
@@ -45,6 +46,8 @@ ecr_reg = create_ecr()
 eks_cluster = create_eks_cluster(vpc_resources['private_subnets'],
                                  vpc_resources['public_subnets'],
                                  vpc_resources['vpc'].id)
+
+deploy_basic_charts = deploy_basic_services()
 
 # Export diff data about Cloud Resources
 # pulumi.export("public_ip", vpn_instance.public_ip)
