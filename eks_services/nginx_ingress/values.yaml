@@ -1,0 +1,20 @@
+# https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+---
+controller:
+  ingressClassResource:
+    default: "true"
+
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
+
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "150m"
+      memory: "200Mi"

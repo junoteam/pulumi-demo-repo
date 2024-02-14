@@ -49,8 +49,9 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     """
     TODO: -Install metrics server, cluster-autoscaler
           -Add custom node-pool
+          - map users to aws-auth
     """
 
     # Output the cluster's kubeconfig and name.
-    pulumi.export("kubeconfig", eks_cluster.kubeconfig)
-    pulumi.export('cluster-name', eks_cluster.eks_cluster.name)
+    # pulumi.export("kubeconfig", eks_cluster.kubeconfig)
+    # pulumi.export('cluster-name', eks_cluster.eks_cluster.name)
