@@ -12,6 +12,7 @@ eks_cluster_name = config_eks.require("eks-cluster_name")
 def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     eks_cluster = eks.Cluster(eks_cluster_name,
                               vpc_id=vpc_id,
+                              name=eks_cluster_name,
                               private_subnet_ids=[subnet.id for subnet in private_subnets],
                               public_subnet_ids=[subnet.id for subnet in public_subnets],
                               create_oidc_provider=False,  # check
@@ -46,12 +47,8 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                                   'Environment': 'dev',
                               })
 
-    """
-    TODO: -Install metrics server, cluster-autoscaler
-          -Add custom node-pool
-          - map users to aws-auth
-    """
-
     # Output the cluster's kubeconfig and name.
-    # pulumi.export("kubeconfig", eks_cluster.kubeconfig)
-    # pulumi.export('cluster-name', eks_cluster.eks_cluster.name)
+    pulumi.export("kubeconfig", eks_cluster.kubeconfig)
+    pulumi.export('cluster-name', eks_cluster.eks_cluster.name)
+
+    return eks_cluster

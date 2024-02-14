@@ -1,15 +1,15 @@
-# from pulumi_kubernetes.helm.v3 import Chart, ChartOpts
 from pulumi_kubernetes.helm.v3 import Release, ReleaseArgs, RepositoryOptsArgs
 from pulumi_kubernetes import Provider, core
 import pulumi
 import yaml
 
 
-def deploy_basic_services():
+def deploy_basic_services(eks_cluster):
 
     # Set a custom Kubeconfig
     custom_kubeconfig_path = "./config"
     k8s_provider = Provider("k8s-provider", kubeconfig=custom_kubeconfig_path)
+    opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])
 
     # Create a List of namespaces
     namespace_names = ["ingress-nginx",
@@ -26,10 +26,10 @@ def deploy_basic_services():
             metadata={
                 "name": name,
             },
-            opts=pulumi.ResourceOptions(provider=k8s_provider)
+            opts=opts
         )
 
-    def metrics_server():
+    def metrics_server(opts):
         # Load values from the metrics_server/values.yaml file
         with open('eks_services/metrics_server/values.yaml', 'r') as file:
             values = yaml.safe_load(file)
@@ -46,10 +46,10 @@ def deploy_basic_services():
                 values=values,
                 namespace="monitoring"
             ),
-            opts=pulumi.ResourceOptions(provider=k8s_provider),
+            opts=opts,
         )
 
-    def ingress_nginx():
+    def ingress_nginx(opts):
         # Load values from the nginx_ingress/values.yaml file
         with open('eks_services/nginx_ingress/values.yaml', 'r') as file:
             values = yaml.safe_load(file)
@@ -65,8 +65,8 @@ def deploy_basic_services():
                 values=values,
                 namespace="ingress-nginx",
             ),
-            opts=pulumi.ResourceOptions(provider=k8s_provider)
+            opts=opts
         )
 
-    metrics_server()
-    # ingress_nginx()
+    metrics_server(opts)
+    ingress_nginx(opts)
