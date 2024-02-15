@@ -9,10 +9,9 @@ depends_on=[eks_cluster] - added to avoid dependency conflicts during pulumi up/
 """
 
 
-def deploy_basic_services(eks_cluster):
+def deploy_basic_services(eks_cluster, eks_kubeconfig):
     # Set a custom Kubeconfig, k8s provider and opts
-    custom_kubeconfig_path = "./config"
-    k8s_provider = Provider("k8s-provider", kubeconfig=custom_kubeconfig_path)
+    k8s_provider = Provider("k8s-provider", kubeconfig=eks_kubeconfig)
     opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])  # dependency
 
     # Create namespaces in EKS
@@ -74,5 +73,6 @@ def deploy_basic_services(eks_cluster):
             opts=opts
         )
 
-    metrics_server(opts)
-    ingress_nginx(opts)
+    # Disable / Enable Helm3 charts in code ->
+    # metrics_server(opts)
+    # ingress_nginx(opts)

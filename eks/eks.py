@@ -47,13 +47,32 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                                   'Environment': 'dev',
                               })
 
-    # EBS CSI Driver as an AWS-managed EKS addon
-    # ebs_csi_addon = aws.eks.Addon("aws-efs-csi-driver",
-    #                               cluster_name=eks_cluster.name,
-    #                               addon_name="aws-efs-csi-driver",
-    #                               addon_version="v1.27.0",
-    #                               resolve_conflicts_on_create="OVERWRITE",
-    #                               opts=pulumi.ResourceOptions(depends_on=[eks_cluster]))
+    # Configure opts
+    opts=pulumi.ResourceOptions(depends_on=[eks_cluster])
+
+    # Amazon EFS CSI driver
+    efs_csi_addon = aws.eks.Addon("aws-efs-csi-driver",
+                                  cluster_name=eks_cluster.name,
+                                  addon_name="aws-efs-csi-driver",
+                                  addon_version="v1.7.4-eksbuild.1",
+                                  resolve_conflicts_on_create="OVERWRITE",
+                                  opts=opts)
+
+    # Amazon EBS CSI driver
+    ebs_csi_addon = aws.eks.Addon("aws-ebs-csi-driver",
+                                  cluster_name=eks_cluster.name,
+                                  addon_name="aws-ebs-csi-driver",
+                                  addon_version="v1.27.0-eksbuild.1",
+                                  resolve_conflicts_on_create="OVERWRITE",
+                                  opts=opts)
+
+    # CoreDNS Addon
+    core_dns_addon = aws.eks.Addon("coredns",
+                                   cluster_name=eks_cluster.name,
+                                   addon_name="coredns",
+                                   addon_version="v1.11.1-eksbuild.6",
+                                   resolve_conflicts_on_update="PRESERVE",
+                                   opts=opts)
 
     """
     - Install addons / ebs-csi driver
@@ -66,4 +85,4 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     pulumi.export("kubeconfig", eks_cluster.kubeconfig)
     pulumi.export('cluster-name', eks_cluster.eks_cluster.name)
 
-    return eks_cluster
+    return eks_cluster, eks_cluster.kubeconfig

@@ -43,11 +43,14 @@ vpc_resources = create_vpc()
 # Create EKS cluster
 #eks_worker_role = eks_worker_role()   # need to set expclicitly in case of not using default node group
 #eks_cluster_role = eks_cluster_role() # need to set expclicitly in case of not using default node group
-eks_cluster = create_eks_cluster(vpc_resources['private_subnets'],
+eks_cluster, eks_kubeconfig = create_eks_cluster(vpc_resources['private_subnets'],
                                  vpc_resources['public_subnets'],
                                  vpc_resources['vpc'].id)
 
-# deploy_basic_charts = deploy_basic_services(eks_cluster)
+"""
+Base services can't be installed in one run, cuz Kubeconfig should be configured first 
+"""
+deploy_basic_charts = deploy_basic_services(eks_cluster, eks_kubeconfig)
 
 # Export diff data about Cloud Resources
 # pulumi.export("public_ip", vpn_instance.public_ip)
