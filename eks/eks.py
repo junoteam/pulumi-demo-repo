@@ -1,7 +1,6 @@
 import pulumi
 import pulumi_eks as eks
 import pulumi_aws as aws
-import yaml
 
 # Retrieve configuration values from Pulumi configuration
 config_eks = pulumi.Config("pulumi-dev-env")
@@ -58,14 +57,25 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     return eks_cluster, eks_cluster.kubeconfig
 
 
-def deploy_eks_addons(eks_cluster):
-
-    # Load addons configuration from YAML
-    yaml_file = 'eks/addons.yaml'
-    with open(yaml_file, 'r') as file:
-        config = yaml.safe_load(file)
-
-    addons = config['addons']
+# Deploy addons to EKS
+def deploy_eks_addons(eks_cluster): # or aws-efs-csi-driver or aws-ebs-csi-driver leading to DependencyViolation and not removed ENI
+    addons = [
+        {
+            "name": "aws-efs-csi-driver",
+            "addon_version": "v1.7.4-eksbuild.1",
+            "resolve_conflicts_on_create": "OVERWRITE",
+        },
+        {
+            "name": "aws-ebs-csi-driver",
+            "addon_version": "v1.27.0-eksbuild.1",
+            "resolve_conflicts_on_create": "OVERWRITE",
+        },
+        {
+            "name": "coredns",
+            "addon_version": "v1.11.1-eksbuild.6",
+            "resolve_conflicts_on_update": "OVERWRITE",
+        },
+    ]
 
     # Configure opts
     opts = pulumi.ResourceOptions(depends_on=[eks_cluster])
@@ -79,8 +89,8 @@ def deploy_eks_addons(eks_cluster):
                       resolve_conflicts_on_create=addon.get("resolve_conflicts_on_create", "NONE"),
                       opts=opts)
 
-"""
-- Install addons / ebs-csi driver
-- Add nodepool
-- Add users via https://www.pulumi.com/registry/packages/aws/api-docs/eks/accessentry/
-"""
+    """
+    - Install addons / ebs-csi driver
+    - Add nodepool
+    - Add users via https://www.pulumi.com/registry/packages/aws/api-docs/eks/accessentry/
+    """

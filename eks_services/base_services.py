@@ -74,5 +74,5 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
         )
 
     # Disable / Enable Helm3 charts in code ->
-    # metrics_server(opts)
-    # ingress_nginx(opts)
+    metrics_server(opts)
+    ingress_nginx(opts)
