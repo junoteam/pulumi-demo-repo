@@ -1,0 +1,10 @@
+addons:
+  - name: aws-efs-csi-driver
+    addon_version: v1.7.4-eksbuild.1
+    resolve_conflicts_on_create: OVERWRITE
+  - name: aws-ebs-csi-driver
+    addon_version: v1.27.0-eksbuild.1
+    resolve_conflicts_on_create: OVERWRITE
+  - name: coredns
+    addon_version: v1.11.1-eksbuild.6
+    resolve_conflicts_on_create: OVERWRITE

@@ -1,6 +1,7 @@
 import pulumi
 import pulumi_eks as eks
 import pulumi_aws as aws
+import yaml
 
 # Retrieve configuration values from Pulumi configuration
 config_eks = pulumi.Config("pulumi-dev-env")
@@ -47,42 +48,39 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                                   'Environment': 'dev',
                               })
 
-    # Configure opts
-    opts=pulumi.ResourceOptions(depends_on=[eks_cluster])
-
-    # Amazon EFS CSI driver
-    efs_csi_addon = aws.eks.Addon("aws-efs-csi-driver",
-                                  cluster_name=eks_cluster.name,
-                                  addon_name="aws-efs-csi-driver",
-                                  addon_version="v1.7.4-eksbuild.1",
-                                  resolve_conflicts_on_create="OVERWRITE",
-                                  opts=opts)
-
-    # Amazon EBS CSI driver
-    ebs_csi_addon = aws.eks.Addon("aws-ebs-csi-driver",
-                                  cluster_name=eks_cluster.name,
-                                  addon_name="aws-ebs-csi-driver",
-                                  addon_version="v1.27.0-eksbuild.1",
-                                  resolve_conflicts_on_create="OVERWRITE",
-                                  opts=opts)
-
-    # CoreDNS Addon
-    core_dns_addon = aws.eks.Addon("coredns",
-                                   cluster_name=eks_cluster.name,
-                                   addon_name="coredns",
-                                   addon_version="v1.11.1-eksbuild.6",
-                                   resolve_conflicts_on_update="PRESERVE",
-                                   opts=opts)
-
-    """
-    - Install addons / ebs-csi driver
-    - Add nodepool
-    - Check OIDC / IRSA
-    - Add users via https://www.pulumi.com/registry/packages/aws/api-docs/eks/accessentry/
-    """
+    # Deploy EKS addons after cluster creation
+    deploy_eks_addons(eks_cluster)
 
     # Output the cluster's kubeconfig and name.
     pulumi.export("kubeconfig", eks_cluster.kubeconfig)
     pulumi.export('cluster-name', eks_cluster.eks_cluster.name)
 
     return eks_cluster, eks_cluster.kubeconfig
+
+
+def deploy_eks_addons(eks_cluster):
+
+    # Load addons configuration from YAML
+    yaml_file = 'eks/addons.yaml'
+    with open(yaml_file, 'r') as file:
+        config = yaml.safe_load(file)
+
+    addons = config['addons']
+
+    # Configure opts
+    opts = pulumi.ResourceOptions(depends_on=[eks_cluster])
+
+    for addon in addons:
+        addon_name = addon["name"]
+        aws.eks.Addon(addon_name,
+                      cluster_name=eks_cluster.name,
+                      addon_name=addon_name,
+                      addon_version=addon["addon_version"],
+                      resolve_conflicts_on_create=addon.get("resolve_conflicts_on_create", "NONE"),
+                      opts=opts)
+
+"""
+- Install addons / ebs-csi driver
+- Add nodepool
+- Add users via https://www.pulumi.com/registry/packages/aws/api-docs/eks/accessentry/
+"""
