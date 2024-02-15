@@ -3,15 +3,19 @@ from pulumi_kubernetes import Provider, core
 import pulumi
 import yaml
 
+"""
+Important note: This module is depends on eks.py module
+depends_on=[eks_cluster] - added to avoid dependency conflicts during pulumi up/destroy
+"""
+
 
 def deploy_basic_services(eks_cluster):
-
-    # Set a custom Kubeconfig
+    # Set a custom Kubeconfig, k8s provider and opts
     custom_kubeconfig_path = "./config"
     k8s_provider = Provider("k8s-provider", kubeconfig=custom_kubeconfig_path)
-    opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])
+    opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])  # dependency
 
-    # Create a List of namespaces
+    # Create namespaces in EKS
     namespace_names = ["ingress-nginx",
                        "argocd",
                        "monitoring",
@@ -29,6 +33,7 @@ def deploy_basic_services(eks_cluster):
             opts=opts
         )
 
+    # Func to deploy metrics-server
     def metrics_server(opts):
         # Load values from the metrics_server/values.yaml file
         with open('eks_services/metrics_server/values.yaml', 'r') as file:
@@ -49,6 +54,7 @@ def deploy_basic_services(eks_cluster):
             opts=opts,
         )
 
+    # Func to deploy ingress-nginx controller
     def ingress_nginx(opts):
         # Load values from the nginx_ingress/values.yaml file
         with open('eks_services/nginx_ingress/values.yaml', 'r') as file:

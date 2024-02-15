@@ -1,5 +1,6 @@
 import pulumi
 import pulumi_eks as eks
+import pulumi_aws as aws
 
 # Retrieve configuration values from Pulumi configuration
 config_eks = pulumi.Config("pulumi-dev-env")
@@ -15,8 +16,7 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                               name=eks_cluster_name,
                               private_subnet_ids=[subnet.id for subnet in private_subnets],
                               public_subnet_ids=[subnet.id for subnet in public_subnets],
-                              create_oidc_provider=False,  # check
-                              skip_default_node_group=False, # Set to True to disable the creation of a default node group
+                              skip_default_node_group=False,
                               # instance_role=eks_worker_role,  # check
                               # service_role=eks_cluster_role, # check
                               # instance_profile_name=iam_instance_profile, # check
@@ -46,6 +46,21 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                                   'ManagedBy': 'Pulumi',
                                   'Environment': 'dev',
                               })
+
+    # EBS CSI Driver as an AWS-managed EKS addon
+    # ebs_csi_addon = aws.eks.Addon("aws-efs-csi-driver",
+    #                               cluster_name=eks_cluster.name,
+    #                               addon_name="aws-efs-csi-driver",
+    #                               addon_version="v1.27.0",
+    #                               resolve_conflicts_on_create="OVERWRITE",
+    #                               opts=pulumi.ResourceOptions(depends_on=[eks_cluster]))
+
+    """
+    - Install addons / ebs-csi driver
+    - Add nodepool
+    - Check OIDC / IRSA
+    - Add users via https://www.pulumi.com/registry/packages/aws/api-docs/eks/accessentry/
+    """
 
     # Output the cluster's kubeconfig and name.
     pulumi.export("kubeconfig", eks_cluster.kubeconfig)
