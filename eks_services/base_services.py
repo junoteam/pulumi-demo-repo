@@ -14,24 +14,6 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
     k8s_provider = Provider("k8s-provider", kubeconfig=eks_kubeconfig)
     opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])  # dependency
 
-    # Create namespaces in EKS
-    namespace_names = ["ingress-nginx",
-                       "argocd",
-                       "monitoring",
-                       "production",
-                       "staging",
-                       "dev"
-                       ]
-
-    for name in namespace_names:
-        core.v1.Namespace(
-            name,
-            metadata={
-                "name": name,
-            },
-            opts=opts
-        )
-
     # Func to deploy metrics-server
     def metrics_server(opts):
         # Load values from the metrics_server/values.yaml file
@@ -48,7 +30,7 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
                     repo="https://kubernetes-sigs.github.io/metrics-server",
                 ),
                 values=values,
-                namespace="monitoring"
+                create_namespace=True
             ),
             opts=opts,
         )
@@ -68,7 +50,7 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
                     repo="https://kubernetes.github.io/ingress-nginx",
                 ),
                 values=values,
-                namespace="ingress-nginx",
+                create_namespace=True,
             ),
             opts=opts
         )

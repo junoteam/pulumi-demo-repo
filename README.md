@@ -1,4 +1,4 @@
-## Description of what this Pulumi IaC code do [AWS Amazon Cloud]
+## Pulumi IaC to provision Cloud Resources in AWS Amazon Cloud
 ![Alt text for the image](./pulumi-pic.png)
 
 ### Versions
