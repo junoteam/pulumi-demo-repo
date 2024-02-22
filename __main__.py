@@ -14,7 +14,7 @@ project_name = pulumi.get_project()
 # Create VPC and related resources
 vpc_resources = create_vpc()
 
-# Create SSM IAM role
+# Create SSM IAM role (should be in __main__, can't create twice)
 # iam_instance_profile = create_iam_role_ssm()
 
 # Create VPN EC2 instance

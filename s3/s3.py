@@ -1,6 +1,7 @@
+import random
+import string
 import pulumi
 from pulumi_aws import s3
-import random, string
 
 # Retrieve configuration values from Pulumi configuration
 config_s3 = pulumi.Config("pulumi-dev-env")

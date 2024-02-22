@@ -41,9 +41,9 @@ def launch_generic_instance(vpc, public_subnets, iam_instance_profile, instance_
                     dnf update
                     """
 
-    # Create an (count) of EC2 instances in one of the public subnets with SSM Role attached
-    for i in range(instance_count):
-        instance_name = f"pulumi-ec2_generic-{i}"
+    # Create a (count) of EC2 instances in one of the public subnets with SSM Role attached
+    for instance in range(instance_count):
+        instance_name = f"pulumi-ec2_generic-{instance}"
         ec2_generic = aws.ec2.Instance(instance_name,
                                        instance_type=instance_type,
                                        ami=ami_id,
@@ -53,7 +53,7 @@ def launch_generic_instance(vpc, public_subnets, iam_instance_profile, instance_
                                        iam_instance_profile=iam_instance_profile.name,
                                        associate_public_ip_address=True,
                                        tags={
-                                           'Name': f'pulumi-generic-instance-{i}',
+                                           'Name': f'pulumi-generic-instance-{instance}',
                                            'Environment': 'dev',
                                            'ManagedBy': 'Pulumi',
                                        })
