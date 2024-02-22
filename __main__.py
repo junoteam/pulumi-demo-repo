@@ -34,10 +34,10 @@ vpc_resources = create_vpc()
 # rds_instance = create_rds_instance(vpc_resources['vpc'].id, rds_subnet_group)
 
 # Create S3 Buckets
-# buckets = create_s3_buckets()
+buckets = create_s3_buckets()
 
 # Create ECR Registry
-# ecr_reg = create_ecr()
+ecr_reg = create_ecr()
 
 # Create EKS cluster
 eks_cluster, eks_kubeconfig = create_eks_cluster(vpc_resources['private_subnets'],
@@ -50,8 +50,8 @@ deploy_basic_charts = deploy_basic_services(eks_cluster, eks_kubeconfig)
 # pulumi.export("public_ip", vpn_instance.public_ip)
 # pulumi.export('instance_url', vpn_instance.public_dns)
 # pulumi.export("private_ip", vpn_instance.private_ip)
-# pulumi.export("buckets", buckets)
-# pulumi.export("projectName", project_name)
+pulumi.export("buckets", buckets)
+pulumi.export("projectName", project_name)
 
 # Export details for each Generic EC2 instance
 # for i, instance in enumerate(generic_instances):

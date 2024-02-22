@@ -12,7 +12,7 @@ depends_on=[eks_cluster] - added to avoid dependency conflicts during pulumi up/
 def deploy_basic_services(eks_cluster, eks_kubeconfig):
     # Set a custom Kubeconfig, k8s provider and opts
     k8s_provider = Provider("k8s-provider", kubeconfig=eks_kubeconfig)
-    opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])  # dependency
+    opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])
 
     def create_namespaces(opts):
         namespaces = []
@@ -62,6 +62,7 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
         with open('eks_services/nginx_ingress/values.yaml', 'r') as file:
             values = yaml.safe_load(file)
 
+        # Deploy the nginx_ingress_chart Helm chart using the loaded values
         nginx_ingress_chart = Release(
             "ingress-nginx",
             ReleaseArgs(
@@ -76,7 +77,9 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
             opts=pulumi.ResourceOptions(provider=k8s_provider, depends_on=ns)
         )
 
-    # Disable / Enable Helm3 charts in code ->
+    # Create Namespaces for Helm3 basic charts (not biz logic)
     ns = create_namespaces(opts)
+
+    # Disable / Enable Helm3 charts in code ->
     metrics_server(ns)
     ingress_nginx(ns)

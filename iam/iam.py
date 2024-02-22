@@ -113,10 +113,5 @@ def create_eks_worker_role():
         policy_arn='arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly',
     )
 
-    # instance_profile = aws.iam.InstanceProfile(
-    #         resource_name=f'node-group-profile',
-    #         role=eks_worker_role
-    # )
-
     # Let's return the role from the function
     return eks_worker_role

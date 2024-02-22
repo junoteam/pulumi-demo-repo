@@ -71,7 +71,7 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     return eks_cluster, eks_cluster.kubeconfig
 
 
-# Deploy addons to EKS
+# Func to deploy addons to EKS
 def deploy_eks_addons(eks_cluster):
     addons = [
         {
@@ -91,9 +91,6 @@ def deploy_eks_addons(eks_cluster):
         },
     ]
 
-    # Configure opts
-    opts = pulumi.ResourceOptions(depends_on=[eks_cluster])
-
     for addon in addons:
         addon_name = addon["name"]
         aws.eks.Addon(addon_name,
@@ -101,9 +98,4 @@ def deploy_eks_addons(eks_cluster):
                       addon_name=addon_name,
                       addon_version=addon["addon_version"],
                       resolve_conflicts_on_create=addon.get("resolve_conflicts_on_create", "NONE"),
-                      opts=opts)
-
-    """
-    - Add nodepool
-    - Add users via https://www.pulumi.com/registry/packages/aws/api-docs/eks/accessentry/
-    """
+                      opts=pulumi.ResourceOptions(depends_on=[eks_cluster]))
