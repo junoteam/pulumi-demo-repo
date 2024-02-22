@@ -37,7 +37,8 @@ def create_iam_role_ssm():
     return instance_profile
 
 
-def eks_cluster_role():
+# Create the EKS Cluster Role
+def create_eks_cluster_role():
     log.info('[base.iam.eks_cluster_role]')
     eks_cluster_role = iam.Role(
         'eks-iam-role',
@@ -72,7 +73,9 @@ def eks_cluster_role():
     # Let's return the role from the function
     return eks_cluster_role
 
-def eks_worker_role():
+
+# Create the EKS Worker Role
+def create_eks_worker_role():
     log.info('[base.iam.eks_worker_role]')
     eks_worker_role = iam.Role(
         'ec2-nodegroup-iam-role',
@@ -110,12 +113,10 @@ def eks_worker_role():
         policy_arn='arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly',
     )
 
-    """
-    instance_profile = aws.iam.InstanceProfile(
-    resource_name=f'node-group-profile-{project_name}-{stack_name}',
-    role=eks_worker_role
-    )
-    """
+    # instance_profile = aws.iam.InstanceProfile(
+    #         resource_name=f'node-group-profile',
+    #         role=eks_worker_role
+    # )
 
     # Let's return the role from the function
     return eks_worker_role

@@ -1,7 +1,7 @@
 import pulumi
 import pulumi_eks as eks
 import pulumi_aws as aws
-from iam.iam import eks_worker_role
+from iam.iam import create_eks_worker_role
 
 # Retrieve configuration values from Pulumi configuration
 config_eks = pulumi.Config("pulumi-dev-env")
@@ -12,7 +12,7 @@ eks_cluster_name = config_eks.require("eks-cluster_name")
 
 # Create an EKS cluster
 def create_eks_cluster(private_subnets, public_subnets, vpc_id):
-    role_object = eks_worker_role()
+    eks_work_role_object = create_eks_worker_role()
     eks_cluster = eks.Cluster(eks_cluster_name,
                               vpc_id=vpc_id,
                               name=eks_cluster_name,
@@ -21,6 +21,17 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                               skip_default_node_group=True,
                               endpoint_public_access=True,
                               version=eks_cluster_version,
+                              instance_role=eks_work_role_object,
+                              role_mappings=[
+                                  {
+                                      'groups': ['system:bootstrappers', 'system:nodes'],
+                                      'rolearn': eks_work_role_object.arn,
+                                      'username': 'system:node:{{EC2PrivateDNSName}}',
+                                  }
+                              ],
+                              vpc_cni_options=eks.VpcCniOptionsArgs(
+                                  warm_ip_target=5,
+                              ),
                               enabled_cluster_log_types=[
                                   "api",
                                   "audit",
@@ -34,9 +45,9 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     # Define Managed Node Group
     managed_node_group = eks.ManagedNodeGroup(
         "managed-node-group",
-        cluster=eks_cluster.core.cluster.name,
-        node_role_arn=role_object.arn,
-        subnet_ids=[subnet.id for subnet in private_subnets + public_subnets],
+        cluster=eks_cluster,
+        node_role=eks_work_role_object,
+        subnet_ids=[subnet.id for subnet in private_subnets],
         scaling_config=aws.eks.NodeGroupScalingConfigArgs(
             desired_size=3,
             min_size=1,
@@ -51,7 +62,7 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     )
 
     # Deploy EKS addons after cluster creation
-    deploy_eks_addons(eks_cluster)
+    # deploy_eks_addons(eks_cluster)
 
     # Output the cluster's kubeconfig and name.
     pulumi.export("kubeconfig", eks_cluster.kubeconfig)
