@@ -14,8 +14,29 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
     k8s_provider = Provider("k8s-provider", kubeconfig=eks_kubeconfig)
     opts = pulumi.ResourceOptions(provider=k8s_provider, depends_on=[eks_cluster])  # dependency
 
+    def create_namespaces(opts):
+        namespaces = []
+        namespace_names = ["ingress-nginx",
+                           "argocd",
+                           "monitoring",
+                           "production",
+                           "staging",
+                           "dev"
+                           ]
+
+        for name in namespace_names:
+            namespace = core.v1.Namespace(
+                name,
+                metadata={
+                    "name": name,
+                },
+                opts=opts
+            )
+            namespaces.append(namespace)
+        return namespaces
+
     # Func to deploy metrics-server
-    def metrics_server(opts):
+    def metrics_server(ns):
         # Load values from the metrics_server/values.yaml file
         with open('eks_services/metrics_server/values.yaml', 'r') as file:
             values = yaml.safe_load(file)
@@ -30,13 +51,13 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
                     repo="https://kubernetes-sigs.github.io/metrics-server",
                 ),
                 values=values,
-                create_namespace=True
+                namespace="monitoring"
             ),
-            opts=opts,
+            opts=pulumi.ResourceOptions(provider=k8s_provider, depends_on=ns),
         )
 
     # Func to deploy ingress-nginx controller
-    def ingress_nginx(opts):
+    def ingress_nginx(ns):
         # Load values from the nginx_ingress/values.yaml file
         with open('eks_services/nginx_ingress/values.yaml', 'r') as file:
             values = yaml.safe_load(file)
@@ -50,11 +71,12 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
                     repo="https://kubernetes.github.io/ingress-nginx",
                 ),
                 values=values,
-                create_namespace=True,
+                namespace="ingress-nginx"
             ),
-            opts=opts
+            opts=pulumi.ResourceOptions(provider=k8s_provider, depends_on=ns)
         )
 
     # Disable / Enable Helm3 charts in code ->
-    metrics_server(opts)
-    ingress_nginx(opts)
+    ns = create_namespaces(opts)
+    metrics_server(ns)
+    ingress_nginx(ns)
