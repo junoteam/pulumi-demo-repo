@@ -29,9 +29,9 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                                       'username': 'system:node:{{EC2PrivateDNSName}}',
                                   }
                               ],
-                              vpc_cni_options=eks.VpcCniOptionsArgs(
-                                  warm_ip_target=5,
-                              ),
+                              # vpc_cni_options=eks.VpcCniOptionsArgs(
+                              #     warm_ip_target=5,
+                              # ),
                               enabled_cluster_log_types=[
                                   "api",
                                   "audit",
@@ -62,7 +62,7 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
     )
 
     # Deploy EKS addons after cluster creation
-    # deploy_eks_addons(eks_cluster)
+    deploy_eks_addons(eks_cluster)
 
     # Output the cluster's kubeconfig and name.
     pulumi.export("kubeconfig", eks_cluster.kubeconfig)
