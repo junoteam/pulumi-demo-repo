@@ -4,7 +4,9 @@
 ### Versions
 Pulumi version: `3.105.0`  
 Python version: `3.11`  
-Pip version: `24.0`
+Pip version: `24.0`  
+EKS version: `1.29`  
+Helm version: `3.14.2`  
 
 ### Install additional Pulumi packages
 EKS Package (https://github.com/pulumi/pulumi-eks)
