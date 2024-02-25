@@ -1,6 +1,7 @@
 config:
   aws:region: us-east-1
   pulumi-dev-env:bucket_names: "apple,banana,cherry"
+  pulumi-dev-env:bucket_suffix: "dev-env-naviteq"
   pulumi-dev-env:instance_type_vpn: t2.micro
   pulumi-dev-env:instance_type_generic: t3.micro
   pulumi-dev-env:private_subnet_cidrs:

@@ -1,24 +1,17 @@
-import random
-import string
 import pulumi
 from pulumi_aws import s3
 
 # Retrieve configuration values from Pulumi configuration
 config_s3 = pulumi.Config("pulumi-dev-env")
 bucket_names_str = config_s3.require("bucket_names")
+bucket_suffix = config_s3.require("bucket_suffix")
 
-# Generate random postfix string to make names of AWS S3 buckets random
-def random_string(length=4):
-    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
-
-
-# Create AWS S3 buckets
 def create_s3_buckets():
     bucket_names = [name.strip() for name in bucket_names_str.split(",")]
     bucket_ids = []
 
     for bucket_name in bucket_names:
-        full_bucket_name = f"{bucket_name}-{random_string(8)}"
+        full_bucket_name = f"{bucket_name}-{bucket_suffix}"
         bucket = s3.Bucket(full_bucket_name, versioning={"enabled": True})
         pulumi.log.info(f"Created bucket with name: {full_bucket_name}")
         bucket_ids.append(bucket.id)
