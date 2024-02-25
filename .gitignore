@@ -2,3 +2,4 @@
 venv/
 .idea
 config
+.DS_Store

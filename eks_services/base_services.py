@@ -80,6 +80,11 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
     # Create Namespaces for Helm3 basic charts (not biz logic)
     ns = create_namespaces(opts)
 
+    """
+    TO DO: Add kubernetes-sigs/external-dns, add cert-manager/cert-manager
+    domain to use: 
+    """
+
     # Disable / Enable Helm3 charts in code ->
     metrics_server(ns)
     ingress_nginx(ns)

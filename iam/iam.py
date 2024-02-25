@@ -1,13 +1,11 @@
 import pulumi_aws as aws
 from pulumi_aws import iam
-from pulumi import log
 import json
 
 
 # Func to create an IAM role for SSM
 def create_iam_role_ssm():
     # Create custom IAM Role for EC2
-    log.info('[base.iam.create_iam_role_ssm]')
     ec2_role = aws.iam.Role(
         "ec2Role",
         assume_role_policy=json.dumps({
@@ -39,7 +37,6 @@ def create_iam_role_ssm():
 
 # Create the EKS Cluster Role
 def create_eks_cluster_role():
-    log.info('[base.iam.eks_cluster_role]')
     eks_cluster_role = iam.Role(
         'eks-iam-role',
         name='EKS-Cluster-Role',
@@ -76,7 +73,6 @@ def create_eks_cluster_role():
 
 # Create the EKS Worker Role
 def create_eks_worker_role():
-    log.info('[base.iam.eks_worker_role]')
     eks_worker_role = iam.Role(
         'ec2-nodegroup-iam-role',
         name='EKS-Worker-Role',
