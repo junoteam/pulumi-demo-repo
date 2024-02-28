@@ -44,7 +44,7 @@ eks_cluster, eks_kubeconfig = create_eks_cluster(vpc_resources['private_subnets'
                                  vpc_resources['public_subnets'],
                                  vpc_resources['vpc'].id)
 
-deploy_basic_charts = deploy_basic_services(eks_cluster, eks_kubeconfig)
+# deploy_basic_charts = deploy_basic_services(eks_cluster, eks_kubeconfig)
 
 # Export diff data about Cloud Resources
 # pulumi.export("public_ip", vpn_instance.public_ip)

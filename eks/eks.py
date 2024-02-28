@@ -48,8 +48,8 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
         cluster=eks_cluster,
         node_role=eks_work_role_object,
         subnet_ids=[subnet.id for subnet in private_subnets],
-        # capacity_type = ON_DEMAND , SPOT
-        # disk_size = 50
+        capacity_type="SPOT",
+        disk_size=50,
         scaling_config=aws.eks.NodeGroupScalingConfigArgs(
             desired_size=3,
             min_size=1,
