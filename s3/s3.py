@@ -6,6 +6,7 @@ config_s3 = pulumi.Config("pulumi-dev-env")
 bucket_names_str = config_s3.require("bucket_names")
 bucket_suffix = config_s3.require("bucket_suffix")
 
+
 def create_s3_buckets():
     bucket_names = [name.strip() for name in bucket_names_str.split(",")]
     print(bucket_names)

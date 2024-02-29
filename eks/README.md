@@ -37,4 +37,5 @@ Check version of addon:
 aws eks describe-addon-versions --addon-name coredns --region us-east-1
 aws eks describe-addon-versions --addon-name kube-proxy --region us-east-1
 aws eks describe-addon-versions --addon-name aws-ebs-csi-driver --region us-east-1
+aws eks describe-addon-versions --addon-name aws-efs-csi-driver --region us-east-1
 ```

@@ -2,7 +2,7 @@ import pulumi_aws as aws
 import pulumi
 
 
-# Func to Create ECR Registry
+# Func to create ECR Registry
 def create_ecr():
     ecr_repo = aws.ecr.Repository("pulumi-ecr-repo",
                                   image_scanning_configuration=aws.ecr.RepositoryImageScanningConfigurationArgs(

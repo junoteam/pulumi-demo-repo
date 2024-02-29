@@ -99,6 +99,12 @@ def deploy_eks_addons(eks_cluster):
             "addon_version": "v1.28.0-eksbuild.1",
             "resolve_conflicts_on_create": "OVERWRITE",
         },
+        {
+            "name": "aws-efs-csi-driver",
+            "addon_version": "v1.7.5-eksbuild.2",
+            "resolve_conflicts_on_create": "OVERWRITE",
+        },
+
     ]
 
     for addon in addons:
