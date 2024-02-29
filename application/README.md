@@ -1,6 +1,7 @@
 ### Deploy
 
 ```bash
+cd app-chart
 helm upgrade --install application ./app-chart --namespace production --kubeconfig ../config
 ```
 
@@ -17,7 +18,6 @@ Business logic should be deployed via ArgoCD in a GitOps way.
 Here it's only example.
 
 Remove this application from cluster before running `pulumi destroy`
-
 ```bash
 helm uninstall application --namespace production --kubeconfig config
 ```
