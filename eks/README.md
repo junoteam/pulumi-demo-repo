@@ -7,7 +7,7 @@ aws eks --region us-east-1 update-kubeconfig --kubeconfig ./config --name <clust
 
 Or take a name of the EKS cluster from the `output` of your Pulumi stack.
 For that in your code `eks.py` should be output defined: 
-```python
+```bash
 ...
 pulumi.export('cluster-name', eks_cluster.name)
 ```
@@ -30,4 +30,11 @@ Role name: `EKS_Cluster_Role`
 ```bash
 arn:aws:iam::aws:policy/AmazonEKSServicePolicy
 arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+```
+
+Check version of addon: 
+```bash
+aws eks describe-addon-versions --addon-name coredns --region us-east-1
+aws eks describe-addon-versions --addon-name kube-proxy --region us-east-1
+aws eks describe-addon-versions --addon-name aws-ebs-csi-driver --region us-east-1
 ```

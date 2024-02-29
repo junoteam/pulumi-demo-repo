@@ -81,7 +81,7 @@ def deploy_basic_services(eks_cluster, eks_kubeconfig):
     ns = create_namespaces(opts)
 
     """
-    TO DO: Add kubernetes-sigs/external-dns, add cert-manager/cert-manager
+    TO DO: Add kubernetes-sigs/external-dns, add cert-manager/cert-manager, ebs-csi
     domain to use: 
     """
 

@@ -8,6 +8,8 @@ config_eks = pulumi.Config("pulumi-dev-env")
 eks_instance_type = config_eks.require("eks-cluster_instance_type")
 eks_cluster_version = config_eks.require("eks-cluster_version")
 eks_cluster_name = config_eks.require("eks-cluster_name")
+eks_capacity_type = config_eks.require("eks-capacity-type")
+eks_node_disk_size = config_eks.require("eks-node-disk-size")
 
 
 # Create an EKS cluster
@@ -43,13 +45,14 @@ def create_eks_cluster(private_subnets, public_subnets, vpc_id):
                               })
 
     # Define Managed Node Group
+    # noinspection PyTypeChecker
     managed_node_group = eks.ManagedNodeGroup(
         "managed-node-group",
         cluster=eks_cluster,
         node_role=eks_work_role_object,
         subnet_ids=[subnet.id for subnet in private_subnets],
-        capacity_type="SPOT",
-        disk_size=50,
+        capacity_type=eks_capacity_type,
+        disk_size=eks_node_disk_size,
         scaling_config=aws.eks.NodeGroupScalingConfigArgs(
             desired_size=3,
             min_size=1,
@@ -78,18 +81,23 @@ def deploy_eks_addons(eks_cluster):
     addons = [
         {
             "name": "vpc-cni",
-            "addon_version": "v1.16.2-eksbuild.1",
+            "addon_version": "v1.16.3-eksbuild.2",
             "resolve_conflicts_on_create": "OVERWRITE",
         },
         {
             "name": "kube-proxy",
-            "addon_version": "v1.29.0-eksbuild.3",
+            "addon_version": "v1.29.1-eksbuild.2",
             "resolve_conflicts_on_create": "OVERWRITE",
         },
         {
             "name": "coredns",
             "addon_version": "v1.11.1-eksbuild.6",
-            "resolve_conflicts_on_update": "OVERWRITE",
+            "resolve_conflicts_on_create": "OVERWRITE",
+        },
+        {
+            "name": "aws-ebs-csi-driver",
+            "addon_version": "v1.28.0-eksbuild.1",
+            "resolve_conflicts_on_create": "OVERWRITE",
         },
     ]
 

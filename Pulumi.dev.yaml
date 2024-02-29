@@ -19,6 +19,8 @@ config:
   pulumi-dev-env:rds-parameter_group_name: "default.mysql8.0"
   pulumi-dev-env:eks-cluster_name: "eks-cluster-dev"
   pulumi-dev-env:eks-cluster_version: "1.29"
+  pulumi-dev-env:eks-capacity-type: "SPOT"
+  pulumi-dev-env:eks-node-disk-size: "50"
   pulumi-dev-env:eks-cluster_instance_type: "t2.medium"
   pulumi-dev-env:rds-password:
     secure: AAABANthXO8Fet0B6OHdcQs7K4Voq7L3xQ6VQ7pCdQsVk08zcEfzYznctRPBGMyXaxbK+1zEmNY=
