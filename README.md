@@ -66,13 +66,16 @@ Folder structure:
     └── vpc.py
 ```
 
-This is very simple Pulumi (Python 3.11) program which do next: 
+This is an example of Pulumi (Python 3.11) program which do create number of cloud resources in AWS Amazon: 
 1. In `us-east-1` region provision VPC, public subnets, IGW, routing table and does table associations and attach IGW to VPC.
 2. Create AWS EC2 instance of type `t2.micro` in the VPC we created previously, create SG and configure it, and run `user-data` on the server after it's up & running.  
 3. `user-data` Git clones repo (https://github.com/junoteam/wg-ansible-playbook.git) which contain simple Ansible playbooks to install and enable IPtables and then install Wireguard server.
 4. Create 3 AWS S3 buckets for a demo purpose. 
 5. Create AWS RDS Instance for a demo purpose. Including private subnets (`vpc.py` module), subnet group and security group for database.
 6. It includes `iam.py` module which creates Instance Profile to attach SSM policy to EC2 instance, to have access to EC2 via SSM.
+7. Module `ec2_generic` creates multiple number of instances of samy type. 
+8. Module `eks` provision an AWS EKS cluster with `managed node group` pool and install additional addons. 
+9. Module `eks_services` install additional software on top of AWS EKS, such as `metrics-server`, `ingress-controller` etc.. 
 
 ### Export `sensitive vars` and set value via Pulumi CLI
 ```bash
